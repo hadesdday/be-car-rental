@@ -4,13 +4,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Collection;
 
 @Entity
-@Table(name = "notificaiton")
+@Table(name = "model")
 @Getter
 @Setter
-public class NotificationEntity extends BaseEntity{
-    private String title;
-    private String message;
+public class ModelEntity extends BaseEntity {
+    private String name;
+    private String type;
+    @OneToMany(mappedBy = "model")
+    private Collection<CarEntity> cars;
 }

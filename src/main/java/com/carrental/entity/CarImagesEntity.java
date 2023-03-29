@@ -7,10 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_covers")
+@Table(name = "car_images")
 @Getter
 @Setter
-public class UserCoversEntity extends BaseEntity{
+public class CarImagesEntity extends BaseEntity{
     private String imageUrl;
     private String status;
+    private Boolean isThumbnail;
 }

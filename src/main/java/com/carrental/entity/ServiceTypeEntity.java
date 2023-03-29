@@ -9,11 +9,12 @@ import javax.persistence.Table;
 import java.util.Collection;
 
 @Entity
-@Table(name = "brand")
+@Table(name = "service_type")
 @Getter
 @Setter
-public class BrandEntity extends BaseEntity {
+public class ServiceTypeEntity extends BaseEntity {
     private String name;
-    @OneToMany(mappedBy = "brand")
-    private Collection<CarEntity> cars;
+
+    @OneToMany(mappedBy = "service")
+    private Collection<TravelTypeEntity> travel;
 }

@@ -9,13 +9,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_covers")
+@Table(name = "notification_user")
 @Getter
 @Setter
-public class UserCoversEntity extends BaseEntity {
-    private String imageUrl;
-    private String status;
+public class NotificationUser extends BaseEntity {
+    @ManyToOne
+    @JoinColumn(name = "notification_id")
+    private NotificationEntity notification;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    private Boolean isSeen;
 }

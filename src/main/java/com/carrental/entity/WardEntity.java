@@ -9,14 +9,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "travel_type")
+@Table(name = "ward")
 @Getter
 @Setter
-public class TravelTypeEntity extends BaseEntity {
+public class WardEntity extends BaseEntity {
     private String name;
-    private String code;
+    private String prefix;
+    @ManyToOne
+    @JoinColumn(name = "district_id")
+    private DistrictEntity district;
 
     @ManyToOne
-    @JoinColumn(name = "service_type_id")
-    private ServiceTypeEntity service;
+    @JoinColumn(name = "province_id")
+    private ProvinceEntity provinceWard;
 }

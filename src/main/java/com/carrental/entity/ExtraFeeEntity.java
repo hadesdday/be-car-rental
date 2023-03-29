@@ -7,10 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "model")
+@Table(name = "extra_fee")
 @Getter
 @Setter
-public class ModelEntity extends BaseEntity{
+public class ExtraFeeEntity extends BaseEntity{
     private String name;
-    private String type;
+    private Integer type;
+    private String unit;
+    private Integer fee;
 }
