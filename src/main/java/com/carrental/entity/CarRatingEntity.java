@@ -1,6 +1,5 @@
 package com.carrental.entity;
 
-import com.carrental.entity.composite_key.RatingId;
 import lombok.Getter;
 import lombok.Setter;
 

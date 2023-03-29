@@ -17,6 +17,4 @@ public class DistrictEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "province_id")
     private ProvinceEntity province;
-
-
 }

@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class RatingId implements Serializable {
+public class CarUserId implements Serializable {
     private Long carId;
     private Long userId;
 }
