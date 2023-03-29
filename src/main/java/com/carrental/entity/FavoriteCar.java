@@ -1,4 +1,4 @@
-package com.carrental;
+package com.carrental.entity;
 
 import com.carrental.entity.BaseEntity;
 import com.carrental.entity.CarEntity;

@@ -1,7 +1,5 @@
 package com.carrental.entity;
 
-import com.carrental.FavoriteCar;
-import com.carrental.entity.composite_key.CarId;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,5 +38,9 @@ public class CarEntity extends BaseEntity implements Serializable {
     private Collection<FeatureEntity> features;
 
     @OneToMany(mappedBy = "car")
-    private Collection<FavoriteCar> favorite;
+    private Collection<FavoriteCar> favorites;
+    @OneToMany(mappedBy = "car")
+    private Collection<CarRentalEntity> rentals;
+
+
 }

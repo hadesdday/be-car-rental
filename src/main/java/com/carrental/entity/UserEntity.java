@@ -1,6 +1,5 @@
 package com.carrental.entity;
 
-import com.carrental.FavoriteCar;
 import com.carrental.enums.Gender;
 import com.carrental.enums.Role;
 import com.carrental.enums.UserStatus;
@@ -35,7 +34,9 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private Collection<UserCoversEntity> covers;
     @OneToMany(mappedBy = "user")
-    private Collection<FavoriteCar> favorite;
+    private Collection<FavoriteCar> favorites;
     @OneToMany(mappedBy = "user")
     private Collection<NotificationUser> notificationUsers;
+    @OneToMany(mappedBy = "user")
+    private Collection<CarRentalEntity> rentals;
 }
