@@ -17,6 +17,7 @@ import java.util.Collection;
 public class UserEntity extends BaseEntity {
     private String username;
     private String password;
+    private String fullName;
     private String email;
     private LocalDateTime dob;
     @Enumerated(EnumType.ORDINAL)
