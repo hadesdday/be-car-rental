@@ -2,6 +2,7 @@ package com.carrental.service;
 
 import com.carrental.dto.JWTDTO;
 import com.carrental.entity.JWTEntity;
+import com.carrental.entity.UserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +24,7 @@ public interface IJWTService {
 
     String doGenerateToken(Map<String, Object> claims, String subject, String type);
 
-    boolean validateToken(String authToken, UserDetails userDetails);
+    boolean validateToken(String authToken);
 
     String getUsernameFromToken(String token);
 
@@ -31,8 +32,5 @@ public interface IJWTService {
 
     List<SimpleGrantedAuthority> getRolesFromToken(String token);
 
-    Authentication getAuthentication(String token, UserDetails userDetails);
     boolean isTokenExpired(String token);
-
-    String getTokenFromHeader(HttpServletRequest request);
 }

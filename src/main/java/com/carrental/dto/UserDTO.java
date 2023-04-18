@@ -19,10 +19,8 @@ public class UserDTO {
     private Long id;
     private String username;
     private String email;
+    private String fullName;
     private LocalDateTime dob;
-//    @Enumerated(EnumType.ORDINAL)
-//    private Gender gender;
+    private Gender gender;
     private String phone;
-//    @Enumerated(EnumType.ORDINAL)
-//    private UserStatus status;
 }

@@ -20,6 +20,7 @@ public class JWTEntity extends BaseEntity{
     @Column
     private Date tokenExpirationDate;
 
+
     public JWTEntity(String token, Date tokenExpirationDate) {
         this.token = token;
         this.tokenExpirationDate = tokenExpirationDate;

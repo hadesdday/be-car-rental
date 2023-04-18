@@ -1,6 +1,7 @@
 package com.carrental.service;
 
 import com.carrental.entity.UserEntity;
+import com.carrental.enums.UserStatus;
 import com.carrental.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,9 +27,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByUsername(username);
-        System.out.println(userEntity);
         User user;
-        if (userEntity != null) {
+        if (userEntity != null && userEntity.getStatus().equals((UserStatus.ACTIVATED))) {
             List<SimpleGrantedAuthority> roles = new ArrayList<SimpleGrantedAuthority>();
             if (userEntity.getRole() != null) {
                 roles.add(new SimpleGrantedAuthority(userEntity.getRole().name()));

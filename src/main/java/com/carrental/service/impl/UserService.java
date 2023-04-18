@@ -2,6 +2,7 @@ package com.carrental.service.impl;
 
 import com.carrental.dto.UserDTO;
 import com.carrental.entity.UserEntity;
+import com.carrental.enums.UserStatus;
 import com.carrental.repository.IUserRepository;
 import com.carrental.service.IUserService;
 import org.modelmapper.ModelMapper;
@@ -60,12 +61,12 @@ public class UserService  implements IUserService {
     }
 
     @Override
-    public boolean checkExistUsername(String username) {
+    public boolean checkExistUser(String username) {
         UserEntity foundUser = this.userRepository.findByUsername(username);
-        if(foundUser != null){
-            return true;
-        }else{
+        if(foundUser == null){
             return false;
+        }else{
+            return  true;
         }
     }
 

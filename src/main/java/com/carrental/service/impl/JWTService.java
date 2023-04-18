@@ -72,12 +72,21 @@ public class JWTService  implements IJWTService {
     }
 
     @Override
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token) {
+        JWTEntity foundJwtEntity = this.jwtRepository.findByToken(token);
         try {
-            String username = getUsernameFromToken(token);
-            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-        } catch (SignatureException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
-            throw new BadCredentialsException("INVALID_CREDENTIALS", ex);
+            if(foundJwtEntity != null && foundJwtEntity.getToken().equals(token)){
+                Jwts.parser()
+                        .setSigningKey(SystemConstance.SECRET_KEY)
+                        .setAllowedClockSkewSeconds(60)
+                        .parseClaimsJws(token);
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
+            // handle exception
+            return false;
         }
     }
 
@@ -104,26 +113,7 @@ public class JWTService  implements IJWTService {
         return null;
     }
 
-    // Get JWT token from request header
-    @Override
-    public String getTokenFromHeader(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
-        }
-        return null;
-    }
-
     // Check if JWT token is expired
-    @Override
-    public Authentication getAuthentication(String token, UserDetails userDetails) {
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = null;
-        if (validateToken(token, userDetails)) {
-            usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-        }
-        return usernamePasswordAuthenticationToken;
-    }
     @Override
     public boolean isTokenExpired(String token) {
         Date expirationDate = Jwts.parser()

@@ -12,7 +12,7 @@ public interface IUserService {
 
     public boolean checkValidPassword(String password);
 
-    public boolean checkExistUsername(String username);
+    public boolean checkExistUser(String username);
 
     public UserDTO save(UserEntity user);
 }
