@@ -131,7 +131,7 @@ public class AuthController {
     @GetMapping("/refresh-access-token")
     public ResponseEntity refreshAccessToken(HttpServletRequest request) {
         String refreshToken = this.httpHeaderReader.getTokenFromHeader(request);
-        System.out.println(refreshToken);
+
         if(StringUtils.hasText(refreshToken) && this.jwtService.validateToken(refreshToken)){
             String username = this.jwtService.getUsernameFromToken(refreshToken);
             UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(username);
@@ -150,6 +150,24 @@ public class AuthController {
             return ResponseEntity.ok(response);
         }else{
             APIResponse<String> response = new APIResponse<String>("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại", HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.ok(response);
+        }
+    }
+    @PostMapping(value = "/revoke-token")
+    public ResponseEntity revokeToken(HttpServletRequest request, @RequestBody String refreshToken) {
+        try{
+            String accessToken = this.httpHeaderReader.getTokenFromHeader(request);
+            Long removedAccess = this.jwtService.removeByToken(accessToken);
+            Long removedRefresh = this.jwtService.removeByToken(refreshToken);
+            if (removedAccess.longValue() != -1 && removedAccess.longValue() != -1) {
+                APIResponse<String> response = new APIResponse<String>("Thu hồi thành công", HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
+                return ResponseEntity.ok(response);
+            }else{
+                APIResponse<String> response = new APIResponse<String>("Thu hồi thất bại", HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.ok(response);
+            }
+        }catch(Exception e){
+            APIResponse<String> response = new APIResponse<String>("Thu hồi thất bại", HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.ok(response);
         }
     }
