@@ -5,6 +5,7 @@ import com.carrental.dto.UserDTO;
 import com.carrental.entity.JWTEntity;
 import com.carrental.entity.UserEntity;
 import com.carrental.enums.UserStatus;
+import com.carrental.requestmodel.ForgetPasswordRequest;
 import com.carrental.requestmodel.LoginRequest;
 import com.carrental.requestmodel.SignUpFormRequest;
 import com.carrental.responsemodel.APIResponse;
@@ -131,7 +132,6 @@ public class AuthController {
     @GetMapping("/refresh-access-token")
     public ResponseEntity refreshAccessToken(HttpServletRequest request) {
         String refreshToken = this.httpHeaderReader.getTokenFromHeader(request);
-
         if(StringUtils.hasText(refreshToken) && this.jwtService.validateToken(refreshToken)){
             String username = this.jwtService.getUsernameFromToken(refreshToken);
             UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(username);
@@ -168,6 +168,33 @@ public class AuthController {
             }
         }catch(Exception e){
             APIResponse<String> response = new APIResponse<String>("Thu hồi thất bại", HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.ok(response);
+        }
+    }
+    @PostMapping("/check-activated-user")
+    public ResponseEntity checkActivatedUser(@RequestBody String username){
+        UserEntity foundUser = this.userService.findByUsername(username);
+        if(foundUser != null && foundUser.getStatus().equals(UserStatus.ACTIVATED)){
+            APIResponse<String> response = new APIResponse<String>(null, HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
+            return ResponseEntity.ok(response);
+        }else if(foundUser != null && foundUser.getStatus().equals(UserStatus.BANNED)){
+            APIResponse<String> response = new APIResponse<String>("Tài khoản của bạn đã bị khoá", HttpStatus.FORBIDDEN.getReasonPhrase(), HttpStatus.FORBIDDEN.value());
+            return ResponseEntity.ok(response);
+        }else{
+            APIResponse<String> response = new APIResponse<String>("Tài khoản không tồn tại", HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @PostMapping(value = "/change-password")
+    public ResponseEntity changePassword(@RequestBody ForgetPasswordRequest forgetPasswordRequest) {
+        UserEntity foundUser = this.userService.findByUsername(forgetPasswordRequest.getUsername());
+        if(foundUser != null && foundUser.getStatus().equals(UserStatus.ACTIVATED) && this.userService.checkValidPassword(forgetPasswordRequest.getNewPassword())){
+            foundUser.setPassword(passwordEncoder.encode(forgetPasswordRequest.getNewPassword()));
+            APIResponse<String> response = new APIResponse<String>("Đổi mật khẩu thành công", HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
+            return ResponseEntity.ok(response);
+        }else{
+            APIResponse<String> response = new APIResponse<String>("Đổi mật khẩu không thành công", HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.ok(response);
         }
     }
