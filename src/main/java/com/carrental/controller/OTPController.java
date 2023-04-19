@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -91,5 +92,17 @@ public class OTPController {
             APIResponse<String> response = new APIResponse<>("Mã xác thực không hợp lệ hoặc đã hết hạn. Vui lòng thử lại", HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(), HttpStatus.UNPROCESSABLE_ENTITY.value());
             return ResponseEntity.ok(response);
         }
+    }
+    @GetMapping(value = "/forget-password")
+    public ResponseEntity<Boolean> changePassword(@RequestBody String username) {
+        if (!StringUtils.isEmpty(username)) {
+            String refactorUsername = StringUtils.trimAllWhitespace(username);
+            UserEntity foundUser = this.userService.findByUsername(refactorUsername);
+            if (foundUser != null) {
+                return ResponseEntity.ok(true);
+            }
+            return ResponseEntity.ok(false);
+        }
+        return ResponseEntity.ok(false);
     }
 }
