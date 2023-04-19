@@ -1,10 +1,10 @@
 package com.carrental.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -24,7 +24,8 @@ public abstract class BaseEntity {
     private String createdBy;
 
     @Column
-    @CreatedDate
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
     @Column
@@ -32,7 +33,7 @@ public abstract class BaseEntity {
     private String modifiedBy;
 
     @Column
-    @LastModifiedDate
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
-
 }

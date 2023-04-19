@@ -17,4 +17,7 @@ public class ServiceTypeEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "service")
     private Collection<TravelTypeEntity> travel;
+
+    @OneToMany(mappedBy = "serviceType")
+    private Collection<ServiceFeeEntity> serviceFees;
 }

@@ -23,6 +23,7 @@ public class CarEntity extends BaseEntity implements Serializable {
     private Double fuelConsumption;
     private String transmission;
     private String rentalStatus;
+    private Boolean isFastRent;
 
     @OneToOne
     @JoinColumn(name = "service_id")
@@ -42,5 +43,8 @@ public class CarEntity extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "car")
     private Collection<CarRentalEntity> rentals;
 
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private DeliveryAddressEntity address;
 
 }

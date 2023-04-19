@@ -3,10 +3,8 @@ package com.carrental.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "delivery_address")
@@ -25,4 +23,6 @@ public class DeliveryAddressEntity extends BaseEntity {
     @JoinColumn(name = "ward_id")
     private WardEntity ward;
 
+    @OneToMany(mappedBy = "address")
+    private List<CarEntity> cars;
 }

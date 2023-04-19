@@ -16,4 +16,6 @@ public class BrandEntity extends BaseEntity {
     private String name;
     @OneToMany(mappedBy = "brand")
     private Collection<CarEntity> cars;
+    @OneToMany(mappedBy = "brand")
+    private Collection<ModelEntity> models;
 }

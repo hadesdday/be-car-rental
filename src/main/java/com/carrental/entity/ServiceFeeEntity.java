@@ -3,9 +3,9 @@ package com.carrental.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.math.BigInteger;
+import java.util.List;
 
 @Entity
 @Table(name = "service_fee")
@@ -13,6 +13,15 @@ import javax.persistence.Table;
 @Setter
 public class ServiceFeeEntity extends BaseEntity {
     private String name;
+    private BigInteger unitPrice;
+
     @OneToOne(mappedBy = "service")
     private CarEntity car;
+
+    @OneToMany(mappedBy = "serviceFee")
+    private List<ExtraFeeEntity> extraFeeList;
+
+    @ManyToOne
+    @JoinColumn(name = "service_type_id")
+    private ServiceTypeEntity serviceType;
 }

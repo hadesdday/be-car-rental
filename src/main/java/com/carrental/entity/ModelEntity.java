@@ -3,10 +3,7 @@ package com.carrental.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
@@ -18,4 +15,7 @@ public class ModelEntity extends BaseEntity {
     private String type;
     @OneToMany(mappedBy = "model")
     private Collection<CarEntity> cars;
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private BrandEntity brand;
 }
