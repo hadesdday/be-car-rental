@@ -191,6 +191,7 @@ public class AuthController {
         UserEntity foundUser = this.userService.findByUsername(forgetPasswordRequest.getUsername());
         if(foundUser != null && foundUser.getStatus().equals(UserStatus.ACTIVATED) && this.userService.checkValidPassword(forgetPasswordRequest.getNewPassword())){
             foundUser.setPassword(passwordEncoder.encode(forgetPasswordRequest.getNewPassword()));
+            this.userService.save(foundUser);
             APIResponse<String> response = new APIResponse<String>("Đổi mật khẩu thành công", HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
             return ResponseEntity.ok(response);
         }else{
