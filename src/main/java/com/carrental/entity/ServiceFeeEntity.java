@@ -12,8 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 public class ServiceFeeEntity extends BaseEntity {
-    private String name;
     private BigInteger unitPrice;
+    private Integer discountByWeek;
+    private Integer discountByMonth;
 
     @OneToOne(mappedBy = "service")
     private CarEntity car;

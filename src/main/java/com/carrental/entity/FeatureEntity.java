@@ -12,6 +12,7 @@ import java.util.Collection;
 @Setter
 public class FeatureEntity extends BaseEntity {
     private String name;
+    private String iconUrl;
 
     @ManyToOne
     @JoinTable(
@@ -21,3 +22,4 @@ public class FeatureEntity extends BaseEntity {
     )
     private CarEntity cars;
 }
+

@@ -1,26 +1,25 @@
 package com.carrental.controller;
 
-import com.carrental.entity.CarEntity;
-import com.carrental.repository.CarRepository;
+import com.carrental.service.ICarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/cars")
 public class CarController {
     @Autowired
-    private CarRepository repository;
+    private ICarService service;
 
-    @GetMapping("/get")
-    public ResponseEntity<?> get() {
-        return ResponseEntity.ok().body(repository.findAll());
-    }
-
-    @PostMapping("/post")
-    public ResponseEntity<?> post(@RequestBody CarEntity car) {
-        return ResponseEntity.ok().build();
+    @GetMapping("/findByPlate/{plate}")
+    public ResponseEntity<?> get(@PathVariable("plate") String plate) {
+        try {
+            return ResponseEntity.ok().body(service.findByPlate(plate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
