@@ -1,0 +1,30 @@
+package com.carrental.service.impl;
+
+import com.carrental.entity.BrandEntity;
+import com.carrental.repository.IBrandRepository;
+import com.carrental.responsemodel.ModelResponse;
+import com.carrental.service.IBrandService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class BrandService implements IBrandService {
+    @Autowired
+    private IBrandRepository repository;
+    @Autowired
+    private ModelMapper mapper;
+
+    @Override
+    public List<ModelResponse> findModelsById(Long id) throws Exception {
+        Optional<BrandEntity> brand = repository.findById(id);
+        if (!brand.isPresent()) throw new Exception("No model car was found !");
+        return brand.get().getModels()
+                .stream().map(i -> mapper.map(i, ModelResponse.class))
+                .collect(Collectors.toList());
+    }
+}
