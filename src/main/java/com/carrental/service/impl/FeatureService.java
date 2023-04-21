@@ -1,5 +1,6 @@
 package com.carrental.service.impl;
 
+import com.carrental.entity.FeatureEntity;
 import com.carrental.repository.IFeatureRepository;
 import com.carrental.responsemodel.FeatureResponse;
 import com.carrental.service.IFeatureService;
@@ -20,5 +21,10 @@ public class FeatureService implements IFeatureService {
     @Override
     public List<FeatureResponse> findAll() {
         return repository.findAll().stream().map(i -> mapper.map(i, FeatureResponse.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FeatureEntity> findAllByIdIn(List<Long> ids) {
+        return repository.findAllByIdIn(ids);
     }
 }

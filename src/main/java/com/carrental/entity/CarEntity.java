@@ -1,16 +1,19 @@
 package com.carrental.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "car")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CarEntity extends BaseEntity implements Serializable {
     //    @EmbeddedId
 //    private CarId ids;
@@ -23,9 +26,10 @@ public class CarEntity extends BaseEntity implements Serializable {
     private Double fuelConsumption;
     private String transmission;
     private String rentalStatus;
+    private String policies;
     private Boolean isFastRent;
 
-    @OneToOne
+    @OneToOne(targetEntity = ServiceFeeEntity.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "service_id")
     private ServiceFeeEntity service;
     @ManyToOne
@@ -35,16 +39,22 @@ public class CarEntity extends BaseEntity implements Serializable {
     @JoinColumn(name = "brand_id")
     private BrandEntity brand;
 
-    @OneToMany(mappedBy = "cars")
+    @OneToMany(mappedBy = "cars", cascade = CascadeType.ALL)
     private Collection<FeatureEntity> features;
 
-    @OneToMany(mappedBy = "car")
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
     private Collection<FavoriteCar> favorites;
-    @OneToMany(mappedBy = "car")
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
     private Collection<CarRentalEntity> rentals;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private DeliveryAddressEntity address;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private UserEntity user;
+
+    @OneToMany(mappedBy = "car", targetEntity = CarImagesEntity.class, cascade = CascadeType.ALL)
+    private List<CarImagesEntity> images;
 }

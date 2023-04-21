@@ -1,7 +1,6 @@
 package com.carrental.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,6 +9,9 @@ import java.util.List;
 @Table(name = "delivery_address")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeliveryAddressEntity extends BaseEntity {
     private String addressName;
 
@@ -23,6 +25,6 @@ public class DeliveryAddressEntity extends BaseEntity {
     @JoinColumn(name = "ward_id")
     private WardEntity ward;
 
-    @OneToMany(mappedBy = "address")
+    @OneToMany(mappedBy = "address",cascade = CascadeType.ALL)
     private List<CarEntity> cars;
 }

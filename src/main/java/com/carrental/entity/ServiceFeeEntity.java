@@ -1,7 +1,6 @@
 package com.carrental.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -11,15 +10,18 @@ import java.util.List;
 @Table(name = "service_fee")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ServiceFeeEntity extends BaseEntity {
-    private BigInteger unitPrice;
+    private BigInteger defaultPrice;
     private Integer discountByWeek;
     private Integer discountByMonth;
 
     @OneToOne(mappedBy = "service")
     private CarEntity car;
 
-    @OneToMany(mappedBy = "serviceFee")
+    @OneToMany(mappedBy = "serviceFee", targetEntity = ExtraFeeEntity.class, cascade = CascadeType.ALL)
     private List<ExtraFeeEntity> extraFeeList;
 
     @ManyToOne

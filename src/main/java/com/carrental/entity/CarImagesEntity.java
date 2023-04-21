@@ -1,17 +1,25 @@
 package com.carrental.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "car_images")
 @Getter
 @Setter
-public class CarImagesEntity extends BaseEntity{
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CarImagesEntity extends BaseEntity {
     private String imageUrl;
     private String status;
     private Boolean isThumbnail;
+
+    @ManyToOne
+    @JoinColumn(name = "car_id")
+    private CarEntity car;
 }

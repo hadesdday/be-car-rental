@@ -40,4 +40,6 @@ public class UserEntity extends BaseEntity {
     private Collection<NotificationUser> notificationUsers;
     @OneToMany(mappedBy = "user")
     private Collection<CarRentalEntity> rentals;
+    @OneToMany(mappedBy = "user")
+    private Collection<CarEntity> cars;
 }

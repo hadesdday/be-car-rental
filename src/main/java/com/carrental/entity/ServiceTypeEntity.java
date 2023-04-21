@@ -3,9 +3,7 @@ package com.carrental.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
@@ -15,9 +13,12 @@ import java.util.Collection;
 public class ServiceTypeEntity extends BaseEntity {
     private String name;
 
-    @OneToMany(mappedBy = "service")
-    private Collection<TravelTypeEntity> travel;
+    @ManyToOne
+    @JoinColumn(name = "travel_type_id")
+    private TravelTypeEntity travelType;
 
     @OneToMany(mappedBy = "serviceType")
     private Collection<ServiceFeeEntity> serviceFees;
+
+
 }

@@ -1,6 +1,6 @@
-package com.carrental.requestmodel;
+package com.carrental.responsemodel;
 
-import com.carrental.dto.ExtraFeeDto;
+import com.carrental.requestmodel.ExtraFeeRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarRegisterRequest {
+public class CarRegisterResponse {
+    private Long id;
     private String username;
     private String plate;
     private Long modelId;
@@ -32,8 +33,9 @@ public class CarRegisterRequest {
     private Integer discountByMonth;
     private Boolean isFastRent;
     private String addressName;//
-    private List<ExtraFeeRequest> extraFees; //over distance limit fee,delivery fee,....
-    private Long serviceTypeId;//wd;self-drive
+//    private Long deliveryLimit;//distance limit
+    private List<ExtraFeeRequest> extraFees;
+    private Long serviceTypeId;//wd-domestic;wd-interstate;selfdrive
     private String policies;
     private List<String> imagesList;
 }
