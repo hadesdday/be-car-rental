@@ -10,7 +10,7 @@ import com.carrental.enums.Role;
 import com.carrental.enums.UserStatus;
 import com.carrental.requestmodel.ForgetPasswordRequest;
 import com.carrental.requestmodel.LoginRequest;
-import com.carrental.requestmodel.SignUpFormRequest;
+import com.carrental.requestmodel.SignUpRequest;
 import com.carrental.requestmodel.SocialUserRequest;
 import com.carrental.responsemodel.APIResponse;
 import com.carrental.responsemodel.AuthenticationResponse;
@@ -141,7 +141,7 @@ public class AuthController {
 
 
     @PostMapping("/validate-sign-up")
-    public ResponseEntity validSignUp(@RequestBody SignUpFormRequest signUpRequest) {
+    public ResponseEntity validSignUp(@RequestBody SignUpRequest signUpRequest) {
         boolean isValidPassword = this.userService.checkValidPassword(signUpRequest.getPassword());
         boolean isExistUser = this.userService.checkExistUser(signUpRequest.getUsername());
         if (isExistUser == true) {

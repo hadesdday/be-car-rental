@@ -6,10 +6,12 @@ import com.carrental.enums.Role;
 import com.carrental.enums.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 
 @Entity
 @Table(name = "user")
@@ -20,7 +22,9 @@ public class UserEntity extends BaseEntity {
     private String password;
     private String fullName;
     private String email;
-    private LocalDateTime dob;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date dob;
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
     private String phone;
