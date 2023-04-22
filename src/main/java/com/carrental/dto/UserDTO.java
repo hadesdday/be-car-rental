@@ -2,6 +2,7 @@ package com.carrental.dto;
 
 import com.carrental.entity.*;
 import com.carrental.enums.Gender;
+import com.carrental.enums.OAuthProvider;
 import com.carrental.enums.Role;
 import com.carrental.enums.UserStatus;
 import lombok.Data;
@@ -23,4 +24,5 @@ public class UserDTO {
     private LocalDateTime dob;
     private Gender gender;
     private String phone;
+    private OAuthProvider provider;
 }

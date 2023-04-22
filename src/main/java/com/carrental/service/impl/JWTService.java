@@ -48,12 +48,14 @@ public class JWTService  implements IJWTService {
     @Override
     public String generateToken(UserDetails userDetails, String type) {
         Map<String, Object> claims = new HashMap<>();
-        Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
-        List<String> rolesList = new ArrayList<>();
-        for (GrantedAuthority role : roles) {
-            rolesList.add(role.getAuthority());
+        if(userDetails.getAuthorities() != null){
+            Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
+            List<String> rolesList = new ArrayList<>();
+            for (GrantedAuthority role : roles) {
+                rolesList.add(role.getAuthority());
+            }
+             claims.put("roles", rolesList);
         }
-        claims.put("roles", rolesList);
         return doGenerateToken(claims, userDetails.getUsername(), type);
     }
 
@@ -122,5 +124,21 @@ public class JWTService  implements IJWTService {
                 .getBody()
                 .getExpiration();
         return expirationDate.before(new Date());
+    }
+
+    @Override
+    public void parseGoogleJwt(String jwt) {
+        System.out.println(jwt);
+
+        try {
+            Claims claims = Jwts.parser().parseClaimsJwt(jwt).getBody();
+            System.out.println(claims);
+            String subject = claims.getSubject();
+            System.out.println(subject);
+            // Get other claims as needed
+        } catch (JwtException ex) {
+            // Handle exception
+            System.out.println(ex);
+        }
     }
 }

@@ -17,6 +17,7 @@ public class CarRatingEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
     private String name;
     private String content;
     private Double rating;

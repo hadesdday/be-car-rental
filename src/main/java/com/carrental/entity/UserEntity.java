@@ -1,6 +1,7 @@
 package com.carrental.entity;
 
 import com.carrental.enums.Gender;
+import com.carrental.enums.OAuthProvider;
 import com.carrental.enums.Role;
 import com.carrental.enums.UserStatus;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class UserEntity extends BaseEntity {
     private UserStatus status;
     @Enumerated(EnumType.ORDINAL)
     private Role role;
+    private OAuthProvider provider;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private Collection<CarRatingEntity> ratings;

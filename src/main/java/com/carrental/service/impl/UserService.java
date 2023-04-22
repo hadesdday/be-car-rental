@@ -2,11 +2,13 @@ package com.carrental.service.impl;
 
 import com.carrental.dto.UserDTO;
 import com.carrental.entity.UserEntity;
+import com.carrental.enums.OAuthProvider;
 import com.carrental.enums.UserStatus;
 import com.carrental.repository.IUserRepository;
 import com.carrental.service.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,11 @@ public class UserService  implements IUserService {
     @Override
     public UserEntity findByUsername(String username) {
         return this.userRepository.findByUsername(username);
+    }
+
+    @Override
+    public UserEntity findByUsernameAndProvider(String username, OAuthProvider provider) {
+        return this.userRepository.findByUsernameAndProvider(username, provider);
     }
 
     @Override
