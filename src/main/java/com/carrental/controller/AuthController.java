@@ -73,7 +73,7 @@ public class AuthController {
         System.out.println(loginRequest);
         UserDetails userDetails;
         userDetails = this.customUserDetailService.loadUserByUsername(loginRequest.getUsername());
-        if (userDetails != null && this.userService.checkPassword(userDetails, loginRequest.getPassword())) {
+        if (userDetails != null) {
             if(this.userService.checkPassword(userDetails, loginRequest.getPassword())){
                 // create JWT
                 String accessToken = this.jwtService.generateToken(userDetails, "access");
