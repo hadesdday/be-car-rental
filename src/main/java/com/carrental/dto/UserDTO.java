@@ -13,6 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -21,8 +22,9 @@ public class UserDTO {
     private String username;
     private String email;
     private String fullName;
-    private LocalDateTime dob;
-    private Gender gender;
+    private String dob;
+    private String gender;
     private String phone;
     private OAuthProvider provider;
+    private Date createdDate;
 }

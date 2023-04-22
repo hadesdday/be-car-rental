@@ -4,6 +4,7 @@ import com.carrental.dto.JWTDTO;
 import com.carrental.dto.UserDTO;
 import com.carrental.entity.JWTEntity;
 import com.carrental.entity.UserEntity;
+import com.carrental.enums.Gender;
 import com.carrental.enums.OAuthProvider;
 import com.carrental.enums.Role;
 import com.carrental.enums.UserStatus;
@@ -84,6 +85,7 @@ public class AuthController {
                 JWTEntity refreshJWTEntity = new JWTEntity(refreshToken, expiredRefreshToken);
                 JWTDTO accessJWTDTO = jwtService.save(accessJWTEntity);
                 JWTDTO refreshJWTDTO = jwtService.save(refreshJWTEntity);
+                System.out.println("cpjwt " + accessJWTDTO.getToken().equals(refreshJWTDTO.getToken()));
                 UserDTO userDTO = this.userService.findByUsernameDTO(userDetails.getUsername());
                 AuthenticationResponse data = new AuthenticationResponse(userDTO, accessJWTDTO, refreshJWTDTO);
                 APIResponse<AuthenticationResponse> response = new APIResponse<>(data, HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
@@ -149,6 +151,7 @@ public class AuthController {
                 foundUser.setPhone(signUpRequest.getPhone());
                 foundUser.setFullName(signUpRequest.getFullName());
                 foundUser.setEmail(signUpRequest.getUsername());
+                foundUser.setGender(Gender.MALE);
                 this.userService.save(foundUser);
                 APIResponse<String> response = new APIResponse<String>("Thông tin hợp lệ", HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
                 return ResponseEntity.ok(response);
@@ -165,6 +168,7 @@ public class AuthController {
                 nonActiveUser.setPhone(signUpRequest.getPhone());
                 nonActiveUser.setFullName(signUpRequest.getFullName());
                 nonActiveUser.setEmail(signUpRequest.getUsername());
+                nonActiveUser.setGender(Gender.MALE);
                 nonActiveUser.setStatus(UserStatus.UNACTIVATED);
                 nonActiveUser.setProvider(OAuthProvider.APPLICATION);
                 this.userService.save(nonActiveUser);
@@ -178,23 +182,24 @@ public class AuthController {
 
     @GetMapping("/refresh-access-token")
     public ResponseEntity refreshAccessToken(HttpServletRequest request) {
+        System.out.println("rft");
         String refreshToken = this.httpHeaderReader.getTokenFromHeader(request);
+        System.out.println("rft " + refreshToken);
         if (StringUtils.hasText(refreshToken) && this.jwtService.validateToken(refreshToken)) {
             String username = this.jwtService.getUsernameFromToken(refreshToken);
-            System.out.println(username);
             UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(username);
-            System.out.println(userDetails);
-            UserEntity userEntity = this.userService.findByUsername(username);
             String newAccessToken = this.jwtService.generateToken(userDetails, "access");
             String newRefreshToken = this.jwtService.generateToken(userDetails, "refresh");
             Date expiredNewAccessToken = this.jwtService.getExpirationDateFromToken(newAccessToken);
             Date expiredNewRefreshToken = this.jwtService.getExpirationDateFromToken(newRefreshToken);
             JWTEntity newAccessTokenEntity = new JWTEntity(newAccessToken, expiredNewAccessToken);
-            JWTEntity newRefreshTokenEntity = new JWTEntity(newRefreshToken, expiredNewRefreshToken);
+            JWTEntity foundRefreshTokenEntity = this.jwtService.findByToken(refreshToken);
+            foundRefreshTokenEntity.setToken(newRefreshToken);
+            foundRefreshTokenEntity.setTokenExpirationDate(expiredNewRefreshToken);
             JWTDTO newAccessTokenDTO = jwtService.save(newAccessTokenEntity);
-            JWTDTO newRefreshTokenDTO = jwtService.save(newRefreshTokenEntity);
+            JWTDTO foundRefreshTokenDTO = jwtService.save(foundRefreshTokenEntity);
             UserDTO userDTO = this.userService.findByUsernameDTO(userDetails.getUsername());
-            AuthenticationResponse data = new AuthenticationResponse(userDTO, newAccessTokenDTO, newRefreshTokenDTO);
+            AuthenticationResponse data = new AuthenticationResponse(userDTO, newAccessTokenDTO, foundRefreshTokenDTO);
             APIResponse<AuthenticationResponse> response = new APIResponse<>(data, HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
             return ResponseEntity.ok(response);
         } else {
