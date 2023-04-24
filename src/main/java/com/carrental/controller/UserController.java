@@ -28,6 +28,7 @@ public class UserController {
             foundUser.setFullName(updatedUserRequest.getFullName());
             foundUser.setGender(updatedUserRequest.getGender());
             foundUser.setDob(updatedUserRequest.getDob());
+            foundUser.setPhone(updatedUserRequest.getPhone());
             this.userService.save(foundUser);
             APIResponse<String> response = new APIResponse<>("Cập nhật thành công", HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
             return ResponseEntity.ok(response);

@@ -32,4 +32,5 @@ public class AppConfig {
         mailSender.getJavaMailProperties().setProperty("mail.smtp.starttls.enable", "true");
         return mailSender;
     }
+
 }

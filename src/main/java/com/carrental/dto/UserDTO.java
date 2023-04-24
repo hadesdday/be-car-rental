@@ -22,7 +22,7 @@ public class UserDTO {
     private String username;
     private String email;
     private String fullName;
-    private String dob;
+    private Date dob;
     private String gender;
     private String phone;
     private OAuthProvider provider;
