@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Service
-public class JWTService  implements IJWTService {
+public class JWTService implements IJWTService {
 
     @Autowired
     private IJWTRepository jwtRepository;
@@ -48,22 +48,24 @@ public class JWTService  implements IJWTService {
     @Override
     public String generateToken(UserDetails userDetails, String type) {
         Map<String, Object> claims = new HashMap<>();
-        Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
-        List<String> rolesList = new ArrayList<>();
-        for (GrantedAuthority role : roles) {
-            rolesList.add(role.getAuthority());
+        if (userDetails.getAuthorities() != null) {
+            Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
+            List<String> rolesList = new ArrayList<>();
+            for (GrantedAuthority role : roles) {
+                rolesList.add(role.getAuthority());
+            }
+            claims.put("roles", rolesList);
         }
-        claims.put("roles", rolesList);
         return doGenerateToken(claims, userDetails.getUsername(), type);
     }
 
     @Override
     public String doGenerateToken(Map<String, Object> claims, String subject, String type) {
-        if(type == "access"){
+        if (type == "access") {
             return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(new Date(System.currentTimeMillis() + SystemConstance.EXPIRATION_TIME))
                     .signWith(SignatureAlgorithm.HS512, SystemConstance.SECRET_KEY).compact();
-        }else{
+        } else {
             // refresh
             return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(new Date(System.currentTimeMillis() + SystemConstance.REFRESH_TIME))
@@ -73,19 +75,21 @@ public class JWTService  implements IJWTService {
 
     @Override
     public boolean validateToken(String token) {
+        System.out.println(token);
         JWTEntity foundJwtEntity = this.jwtRepository.findByToken(token);
         try {
-            if(foundJwtEntity != null && foundJwtEntity.getToken().equals(token)){
+            if (foundJwtEntity != null && foundJwtEntity.getToken().equals(token)) {
                 Jwts.parser()
                         .setSigningKey(SystemConstance.SECRET_KEY)
                         .setAllowedClockSkewSeconds(60)
                         .parseClaimsJws(token);
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } catch (Exception e) {
             // handle exception
+            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -122,5 +126,21 @@ public class JWTService  implements IJWTService {
                 .getBody()
                 .getExpiration();
         return expirationDate.before(new Date());
+    }
+
+    @Override
+    public void parseGoogleJwt(String jwt) {
+        System.out.println(jwt);
+
+        try {
+            Claims claims = Jwts.parser().parseClaimsJwt(jwt).getBody();
+            System.out.println(claims);
+            String subject = claims.getSubject();
+            System.out.println(subject);
+            // Get other claims as needed
+        } catch (JwtException ex) {
+            // Handle exception
+            System.out.println(ex);
+        }
     }
 }

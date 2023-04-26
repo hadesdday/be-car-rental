@@ -1,6 +1,8 @@
 package com.carrental.service;
 
 import com.carrental.entity.UserEntity;
+import com.carrental.enums.OAuthProvider;
+import com.carrental.enums.Role;
 import com.carrental.enums.UserStatus;
 import com.carrental.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
@@ -24,6 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     AuthenticationManager authenticationManager;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByUsername(username);
@@ -35,7 +39,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
             user = new User(username, userEntity.getPassword(), roles);
             return user;
+        }else{
+            return null;
         }
-        throw new UsernameNotFoundException("Tài khoản không tồn tại");
     }
+
 }

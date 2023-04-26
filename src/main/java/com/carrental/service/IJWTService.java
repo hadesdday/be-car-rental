@@ -33,4 +33,6 @@ public interface IJWTService {
     List<SimpleGrantedAuthority> getRolesFromToken(String token);
 
     boolean isTokenExpired(String token);
+
+    void parseGoogleJwt(String jwt);
 }
