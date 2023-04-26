@@ -3,6 +3,7 @@ package com.carrental.service.impl;
 import com.carrental.entity.BrandEntity;
 import com.carrental.entity.ModelEntity;
 import com.carrental.repository.IBrandRepository;
+import com.carrental.responsemodel.BrandResponse;
 import com.carrental.responsemodel.ModelResponse;
 import com.carrental.service.IBrandService;
 import org.modelmapper.ModelMapper;
@@ -34,5 +35,11 @@ public class BrandService implements IBrandService {
         Optional<BrandEntity> brand = repository.findById(id);
         if (!brand.isPresent()) throw new Exception("No brand was found !");
         return brand.get();
+    }
+
+    @Override
+    public List<BrandResponse> findAll() {
+        return repository.findAll().stream()
+                .map(i -> mapper.map(i, BrandResponse.class)).collect(Collectors.toList());
     }
 }

@@ -20,4 +20,14 @@ public class BrandController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/getModels")
+    public ResponseEntity<?> getAllModel() {
+        try {
+            return ResponseEntity.ok().body(service.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
