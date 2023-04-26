@@ -107,11 +107,12 @@ public class CarService implements ICarService {
                         .build()
         ).collect(Collectors.toList()));
         List<FeatureEntity> features = featureService.findAllByIdIn(request.getFeatureList());
-        for (int i = 0; i < features.size(); i++) {
-            FeatureEntity feat = features.get(i);
-            feat.setCars(carEntity);
-            features.set(i, feat);
-        }
+//        for (int i = 0; i < features.size(); i++) {
+//            FeatureEntity feat = features.get(i);
+//            feat.setCars(carEntity);
+//            features.set(i, feat);
+//        }
+        features.forEach(i -> i.setCars(carEntity));
         carEntity.setFeatures(features);
         CarEntity savedCar = repository.save(carEntity);
         return CarRegisterResponse.builder()
