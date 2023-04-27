@@ -18,4 +18,6 @@ public interface IFileStorageService {
     Stream<Path> loadAll();
 
     String getFilename(MultipartFile file);
+
+    String deleteFileByName(String fileName);
 }
