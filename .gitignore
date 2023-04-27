@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 uploads/
+.DS_Store
