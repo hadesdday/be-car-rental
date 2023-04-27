@@ -55,4 +55,9 @@ public class UploadFileController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
+
+    @DeleteMapping("/deleteFileByName/{name}")
+    public ResponseEntity<?> deleteFileByName(@PathVariable("name") String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(storageService.deleteFileByName(name));
+    }
 }

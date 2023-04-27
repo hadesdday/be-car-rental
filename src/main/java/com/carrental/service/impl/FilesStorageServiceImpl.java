@@ -42,7 +42,7 @@ public class FilesStorageServiceImpl implements IFileStorageService {
             Path truthPath = this.rootPath;
             if (extend != null) {
                 File newDir = new File(this.rootFile, extend);
-                if (!newDir.exists()){
+                if (!newDir.exists()) {
                     Path extendPath = Paths.get(extend);
                     truthPath = this.rootPath.resolve(extendPath);
                     Files.createDirectory(truthPath);
@@ -97,5 +97,24 @@ public class FilesStorageServiceImpl implements IFileStorageService {
         String uuidAsString = uuid.toString();
         String result = uuidAsString + "." + fileExtension;
         return result;
+    }
+
+    @Override
+    public String deleteFileByName(String fileName) {
+        try {
+            Path file = rootPath.resolve(fileName);
+            Resource resource = new UrlResource(file.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                resource.getFile().delete();
+                return fileName;
+            } else {
+                throw new RuntimeException("Failed to delete file!");
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
