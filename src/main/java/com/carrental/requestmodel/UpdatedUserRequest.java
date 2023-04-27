@@ -10,4 +10,5 @@ public class UpdatedUserRequest {
     private String fullName;
     private Gender gender;
     private Date dob;
+    private String phone;
 }

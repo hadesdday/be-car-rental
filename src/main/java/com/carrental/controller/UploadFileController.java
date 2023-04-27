@@ -28,7 +28,7 @@ public class UploadFileController {
         List<String> fileNames = new ArrayList<>();
         try {
             Arrays.stream(files).forEach(file -> {
-                String fileName = storageService.save(file);
+                String fileName = storageService.save(file, "");
                 fileNames.add(fileName);
             });
             return ResponseEntity.status(HttpStatus.OK).body(fileNames);

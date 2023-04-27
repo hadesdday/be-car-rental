@@ -27,4 +27,9 @@ public class FeatureService implements IFeatureService {
     public List<FeatureEntity> findAllByIdIn(List<Long> ids) {
         return repository.findAllByIdIn(ids);
     }
+
+    @Override
+    public FeatureEntity save(FeatureEntity f) {
+        return this.repository.save(f);
+    }
 }
