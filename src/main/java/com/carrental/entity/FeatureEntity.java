@@ -12,7 +12,7 @@ import java.util.Collection;
 @Setter
 public class FeatureEntity extends BaseEntity {
     private String name;
-    private String iconUrl;
+    private String iconFilename;
 
     @ManyToOne
     @JoinTable(

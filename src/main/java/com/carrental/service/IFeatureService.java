@@ -8,4 +8,6 @@ import java.util.List;
 public interface IFeatureService {
     List<FeatureResponse> findAll();
     List<FeatureEntity> findAllByIdIn(List<Long> ids);
+
+    FeatureEntity save(FeatureEntity f);
 }
