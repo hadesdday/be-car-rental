@@ -21,6 +21,7 @@ public class CarRegisterRequest {
     private Integer seats;
     private String color;
     private String engine;
+    private String fuel;
     private Double fuelConsumption;
     private String transmission;
     private String rentalStatus;

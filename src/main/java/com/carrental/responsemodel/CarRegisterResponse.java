@@ -21,6 +21,7 @@ public class CarRegisterResponse {
     private Long brandId;
     private Integer seats;
     private String color;
+    private String fuel;
     private String engine;
     private Double fuelConsumption;
     private String transmission;
