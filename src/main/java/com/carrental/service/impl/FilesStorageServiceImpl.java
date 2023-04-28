@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class FilesStorageServiceImpl implements IFileStorageService {
     private String UPLOAD_DIR = "src/main/resources/uploads";
     private Path rootPath = Paths.get(UPLOAD_DIR);
-
     private File rootFile;
 
     @Override
@@ -63,6 +62,24 @@ public class FilesStorageServiceImpl implements IFileStorageService {
     public Resource load(String filename) {
         try {
             Path file = rootPath.resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new RuntimeException("Failed to load file!");
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Resource loadFeatureIcon(String filename) {
+        try {
+            String featureUploadDir = UPLOAD_DIR + "/feature-icon";
+            Path featureRootPath = Paths.get(featureUploadDir);
+            Path file = featureRootPath.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
 
             if (resource.exists() || resource.isReadable()) {

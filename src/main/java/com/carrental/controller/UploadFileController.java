@@ -56,6 +56,13 @@ public class UploadFileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
+    @GetMapping("/feature-icon/{filename:.+}")
+    public ResponseEntity<Resource> getFeatureIcon(@PathVariable String filename) {
+        Resource file = storageService.loadFeatureIcon(filename);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
     @DeleteMapping("/deleteFileByName/{name}")
     public ResponseEntity<?> deleteFileByName(@PathVariable("name") String name) {
         return ResponseEntity.status(HttpStatus.OK).body(storageService.deleteFileByName(name));
