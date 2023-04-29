@@ -20,7 +20,6 @@ public class CarRegisterRequest {
     private Long brandId;
     private Integer seats;
     private String color;
-    private String engine;
     private String fuel;
     private Double fuelConsumption;
     private String transmission;
