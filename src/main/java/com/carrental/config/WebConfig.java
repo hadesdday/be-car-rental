@@ -24,8 +24,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // TODO Auto-generated method stub
-        registry.addResourceHandler("/uploads/feature-icon/**").addResourceLocations("file:/Users/huynhhuy/Documents/Coding-Project/Back-end/be-car-rental/src/main/resources/uploads/feature-icon/");
+        registry.addResourceHandler("/uploads/feature-icon/**")
+                .addResourceLocations("file:/Users/huynhhuy/Documents/Coding-Project/Back-end/be-car-rental/src/main/resources/uploads/feature-icon/");
         registry.addResourceHandler("/icon/feature-icon/**")
                 .addResourceLocations("classpath:/uploads/feature-icon/");
+        registry.addResourceHandler("/images/car/**")
+                .addResourceLocations("classpath:/uploads/");
     }
 }

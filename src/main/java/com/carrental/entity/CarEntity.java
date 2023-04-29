@@ -1,5 +1,6 @@
 package com.carrental.entity;
 
+import com.carrental.enums.CarStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,9 +26,10 @@ public class CarEntity extends BaseEntity implements Serializable {
     private String fuel;
     private Double fuelConsumption;
     private String transmission;
-    private String rentalStatus;
     private String policies;
     private Boolean isFastRent;
+    @Enumerated(EnumType.ORDINAL)
+    private CarStatus status;
 
     @OneToOne(targetEntity = ServiceFeeEntity.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "service_id")

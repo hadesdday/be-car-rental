@@ -7,14 +7,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface IUserService {
 
-    public UserDTO findByUsernameDTO(String username);
-    public UserEntity findByUsername(String username);
+    UserDTO findByUsernameDTO(String username);
+
+    UserEntity findByUsername(String username);
+
     UserEntity findByUsernameAndProvider(String username, OAuthProvider provider);
-    public boolean checkPassword(UserDetails userDetails, String password);
 
-    public boolean checkValidPassword(String password);
+    boolean checkPassword(UserDetails userDetails, String password);
 
-    public boolean checkExistUser(String username);
+    boolean checkValidPassword(String password);
 
-    public UserDTO save(UserEntity user);
+    boolean checkExistUser(String username);
+
+    UserDTO save(UserEntity user);
 }

@@ -7,4 +7,5 @@ public interface ICarService {
     String findByPlate(String plate);
 
     CarRegisterResponse registerNewCar(CarRegisterRequest request) throws Exception;
+
 }

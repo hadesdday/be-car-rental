@@ -1,5 +1,6 @@
 package com.carrental.responsemodel;
 
+import com.carrental.enums.CarStatus;
 import com.carrental.requestmodel.ExtraFeeRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,7 @@ public class CarRegisterResponse {
     private String fuel;
     private Double fuelConsumption;
     private String transmission;
-    private String rentalStatus;
+    private CarStatus status;
     private String description;
     private Integer yearOfManufacture;
     private List<Long> featureList;

@@ -1,6 +1,8 @@
 package com.carrental.service.impl;
 
 import com.carrental.entity.*;
+import com.carrental.enums.CarStatus;
+import com.carrental.enums.UserStatus;
 import com.carrental.repository.ICarRepository;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.ExtraFeeRequest;
@@ -24,10 +26,6 @@ public class CarService implements ICarService {
     @Autowired
     private IServiceTypeService serviceTypeService;
     @Autowired
-    private IServiceFeeService serviceFeeService;
-    @Autowired
-    private IExtraFeeService extraFeeService;
-    @Autowired
     private IModelService modelService;
     @Autowired
     private IBrandService brandService;
@@ -35,7 +33,6 @@ public class CarService implements ICarService {
     private IFeatureService featureService;
     @Autowired
     private ModelMapper mapper;
-
 
     @Override
     @Transactional
@@ -51,7 +48,8 @@ public class CarService implements ICarService {
         String existedPlate = findByPlate(request.getPlate());
         if (!existedPlate.isEmpty()) throw new Exception("Biển số xe đã được đăng ký trên hệ thống vui lòng thử lại !");
         UserEntity user = userService.findByUsername(request.getUsername());
-        if (null == user) throw new Exception("Không tìm thấy người dùng hợp lệ !");
+        if (null == user || user.getStatus() != UserStatus.ACTIVATED)
+            throw new Exception("Không tìm thấy người dùng hợp lệ !");
 
         ServiceTypeEntity serviceType = serviceTypeService.findById(request.getServiceTypeId());
 
@@ -60,7 +58,6 @@ public class CarService implements ICarService {
                 .defaultPrice(request.getDefaultPrice())
                 .discountByWeek(request.getDiscountByWeek())
                 .discountByMonth(request.getDiscountByMonth())
-//                .extraFeeList(extraFees)
                 .build();
 
         List<ExtraFeeEntity> extraFees = request.getExtraFees().stream().map(
@@ -74,7 +71,6 @@ public class CarService implements ICarService {
         ).collect(Collectors.toList());
 
         serviceFee.setExtraFeeList(extraFees);
-//        ServiceFeeEntity savedServiceFee = serviceFeeService.save(serviceFee);
 
         DeliveryAddressEntity address = DeliveryAddressEntity.builder()
                 .addressName(request.getAddressName())
@@ -89,7 +85,7 @@ public class CarService implements ICarService {
                 .fuel(request.getFuel())
                 .fuelConsumption(request.getFuelConsumption())
                 .transmission(request.getTransmission())
-                .rentalStatus("PENDING_APPROVAL")
+                .status(CarStatus.PENDING_APPROVAL)
                 .isFastRent(request.getIsFastRent())
                 .service(serviceFee)
                 .model(modelService.findById(request.getModelId()))
@@ -125,7 +121,7 @@ public class CarService implements ICarService {
                 .color(savedCar.getColor())
                 .fuelConsumption(savedCar.getFuelConsumption())
                 .transmission(savedCar.getTransmission())
-                .rentalStatus(savedCar.getRentalStatus())
+                .status(savedCar.getStatus())
                 .description(savedCar.getDescription())
                 .yearOfManufacture(savedCar.getYearOfManufacture())
                 .featureList(savedCar.getFeatures().stream().map(BaseEntity::getId).collect(Collectors.toList()))

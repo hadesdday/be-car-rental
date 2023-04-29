@@ -23,7 +23,6 @@ public class CarRegisterRequest {
     private String fuel;
     private Double fuelConsumption;
     private String transmission;
-    private String rentalStatus;
     private String description;
     private Integer yearOfManufacture;
     private List<Long> featureList;
