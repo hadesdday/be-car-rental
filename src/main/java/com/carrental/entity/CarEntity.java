@@ -46,6 +46,10 @@ public class CarEntity extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
     private Collection<FavoriteCar> favorites;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    private Collection<CarRatingEntity> ratings;
+
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
     private Collection<CarRentalEntity> rentals;
 
@@ -59,4 +63,5 @@ public class CarEntity extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "car", targetEntity = CarImagesEntity.class, cascade = CascadeType.ALL)
     private List<CarImagesEntity> images;
+
 }

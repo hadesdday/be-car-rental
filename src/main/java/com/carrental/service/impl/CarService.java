@@ -2,16 +2,22 @@ package com.carrental.service.impl;
 
 import com.carrental.entity.*;
 import com.carrental.enums.CarStatus;
+import com.carrental.enums.RentalStatus;
 import com.carrental.enums.UserStatus;
 import com.carrental.repository.ICarRepository;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.ExtraFeeRequest;
 import com.carrental.responsemodel.CarRegisterResponse;
+import com.carrental.responsemodel.RegisteredCarResponse;
 import com.carrental.service.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +26,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class CarService implements ICarService {
     @Autowired
-    private ICarRepository repository;
+    private ICarRepository carRepository;
     @Autowired
     private IUserService userService;
     @Autowired
@@ -33,11 +39,13 @@ public class CarService implements ICarService {
     private IFeatureService featureService;
     @Autowired
     private ModelMapper mapper;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     @Transactional
     public String findByPlate(String plate) {
-        List<CarEntity> list = repository.findByPlate(plate);
+        List<CarEntity> list = carRepository.findByPlate(plate);
         if (list.size() < 1) return "";
         return list.get(0).getPlate();
     }
@@ -109,7 +117,7 @@ public class CarService implements ICarService {
             features.set(i, feat);
         }
         carEntity.setFeatures(features);
-        CarEntity savedCar = repository.save(carEntity);
+        CarEntity savedCar = carRepository.save(carEntity);
         return CarRegisterResponse.builder()
                 .id(savedCar.getId())
                 .username(savedCar.getUser().getUsername())
@@ -136,5 +144,34 @@ public class CarService implements ICarService {
                 .policies(savedCar.getPolicies())
                 .imagesList(savedCar.getImages().stream().map(CarImagesEntity::getImageUrl).collect(Collectors.toList()))
                 .build();
+    }
+
+    @Override
+    public List<RegisteredCarResponse> findAllRegisteredCar(String username) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<RegisteredCarResponse> query = cb.createQuery(RegisteredCarResponse.class);
+        Root<CarEntity> root = query.from(CarEntity.class);
+        Join<CarEntity, CarRatingEntity> carRatingJoin = root.join("ratings", JoinType.LEFT);
+
+        Join<CarEntity, CarRentalEntity> carRentalEntityJoin = root.join("rentals", JoinType.LEFT);
+        Expression<Long> countRental = cb.count(carRentalEntityJoin);
+
+        query.multiselect(
+                root.get("id"),
+                root.get("model").get("name"),
+                root.get("service").get("defaultPrice"),
+                root.get("status"),
+                cb.coalesce(
+                        countRental,
+                        0
+                ),
+                cb.coalesce(cb.avg(carRatingJoin.get("rating")), 0)// return 0 if there is no rating
+        );
+
+        query.where(cb.equal(root.get("user").get("username"), username));
+        query.groupBy(root.get("id"));
+
+        TypedQuery<RegisteredCarResponse> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
     }
 }

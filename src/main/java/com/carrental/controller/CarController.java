@@ -21,4 +21,14 @@ public class CarController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/findRegisteredCar")
+    public ResponseEntity<?> findRegisteredCar(@RequestParam("username") String username) {
+        try {
+            return ResponseEntity.ok().body(service.findAllRegisteredCar(username));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

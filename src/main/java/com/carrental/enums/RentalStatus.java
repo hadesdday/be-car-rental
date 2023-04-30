@@ -4,5 +4,6 @@ public enum RentalStatus {
     PENDING,
     ACCEPTED,
     DELIVERED,
-    RETURNED
+    RETURNED,
+    COMPLETED
 }
