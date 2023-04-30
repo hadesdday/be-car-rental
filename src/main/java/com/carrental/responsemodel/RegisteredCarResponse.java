@@ -1,9 +1,11 @@
 package com.carrental.responsemodel;
 
+import com.carrental.entity.CarImagesEntity;
 import com.carrental.enums.CarStatus;
 import lombok.*;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @Data
 public class RegisteredCarResponse {
@@ -13,14 +15,16 @@ public class RegisteredCarResponse {
     private CarStatus status;
     private Long totalRental;
     private Double avgRating;
+    private String imageUrl;
 
-    public RegisteredCarResponse(Long id, String name, BigInteger defaultPrice, CarStatus status, Long totalRental, Double avgRating) {
+    public RegisteredCarResponse(Long id, String name, BigInteger defaultPrice, CarStatus status, Long totalRental, Double avgRating, String imageUrl) {
         this.id = id;
         this.name = name;
         this.defaultPrice = defaultPrice;
         this.status = status;
         this.totalRental = totalRental;
         this.avgRating = avgRating;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -69,5 +73,13 @@ public class RegisteredCarResponse {
 
     public void setAvgRating(Double avgRating) {
         this.avgRating = avgRating;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

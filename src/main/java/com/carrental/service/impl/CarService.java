@@ -2,7 +2,6 @@ package com.carrental.service.impl;
 
 import com.carrental.entity.*;
 import com.carrental.enums.CarStatus;
-import com.carrental.enums.RentalStatus;
 import com.carrental.enums.UserStatus;
 import com.carrental.repository.ICarRepository;
 import com.carrental.requestmodel.CarRegisterRequest;
@@ -19,7 +18,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -147,31 +148,41 @@ public class CarService implements ICarService {
     }
 
     @Override
-    public List<RegisteredCarResponse> findAllRegisteredCar(String username) {
+    public Set<RegisteredCarResponse> findAllRegisteredCar(String username) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<RegisteredCarResponse> query = cb.createQuery(RegisteredCarResponse.class);
         Root<CarEntity> root = query.from(CarEntity.class);
+
+        //car rating join
         Join<CarEntity, CarRatingEntity> carRatingJoin = root.join("ratings", JoinType.LEFT);
 
+        //car rental join
         Join<CarEntity, CarRentalEntity> carRentalEntityJoin = root.join("rentals", JoinType.LEFT);
         Expression<Long> countRental = cb.count(carRentalEntityJoin);
+
+        //car images join
+        Join<CarEntity, CarImagesEntity> imageJoin = root.join("images", JoinType.LEFT);
+        imageJoin.on(
+                cb.and(
+                        cb.equal(imageJoin.get("car"), root),
+                        cb.isTrue(imageJoin.get("isThumbnail"))
+                )
+        );
 
         query.multiselect(
                 root.get("id"),
                 root.get("model").get("name"),
                 root.get("service").get("defaultPrice"),
                 root.get("status"),
-                cb.coalesce(
-                        countRental,
-                        0
-                ),
-                cb.coalesce(cb.avg(carRatingJoin.get("rating")), 0)// return 0 if there is no rating
-        );
+                cb.coalesce(countRental, 0),
+                cb.coalesce(cb.avg(carRatingJoin.get("rating")), 0),// return 0 if there is no rating,
+                imageJoin.get("imageUrl")
+        ).distinct(true);
 
         query.where(cb.equal(root.get("user").get("username"), username));
-        query.groupBy(root.get("id"));
+        query.groupBy(root.get("id"), imageJoin.get("car").get("id"), imageJoin.get("imageUrl"));
 
         TypedQuery<RegisteredCarResponse> typedQuery = entityManager.createQuery(query);
-        return typedQuery.getResultList();
+        return new HashSet<>(typedQuery.getResultList());
     }
 }
