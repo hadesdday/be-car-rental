@@ -103,14 +103,20 @@ public class CarService implements ICarService {
                 .policies(request.getPolicies())
                 .user(user)
                 .build();
-        carEntity.setImages(request.getImagesList().stream().map(i ->
+
+        List<CarImagesEntity> carImagesList = request.getImagesList().stream().map(i ->
                 CarImagesEntity.builder()
                         .imageUrl(i)
                         .isThumbnail(false)
                         .status("ACTIVE")
                         .car(carEntity)
                         .build()
-        ).collect(Collectors.toList()));
+        ).collect(Collectors.toList());
+        CarImagesEntity carImagesEntity = carImagesList.get(0);
+        carImagesEntity.setIsThumbnail(true);
+        carImagesList.set(0, carImagesEntity);
+        carEntity.setImages(carImagesList);
+
         List<FeatureEntity> features = featureService.findAllByIdIn(request.getFeatureList());
         for (int i = 0; i < features.size(); i++) {
             FeatureEntity feat = features.get(i);
