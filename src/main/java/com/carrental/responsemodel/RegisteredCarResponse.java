@@ -1,11 +1,9 @@
 package com.carrental.responsemodel;
 
-import com.carrental.entity.CarImagesEntity;
 import com.carrental.enums.CarStatus;
-import lombok.*;
+import lombok.Data;
 
 import java.math.BigInteger;
-import java.util.List;
 
 @Data
 public class RegisteredCarResponse {

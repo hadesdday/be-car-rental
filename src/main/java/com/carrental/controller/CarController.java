@@ -31,4 +31,14 @@ public class CarController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/findAll")
+    public ResponseEntity<?> findAll() {
+        try {
+            return ResponseEntity.ok().body(service.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

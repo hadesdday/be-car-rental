@@ -6,7 +6,9 @@ import com.carrental.enums.UserStatus;
 import com.carrental.repository.ICarRepository;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.ExtraFeeRequest;
+import com.carrental.responsemodel.CarAdminResponse;
 import com.carrental.responsemodel.CarRegisterResponse;
+import com.carrental.responsemodel.IdNameResponse;
 import com.carrental.responsemodel.RegisteredCarResponse;
 import com.carrental.service.*;
 import org.modelmapper.ModelMapper;
@@ -190,5 +192,37 @@ public class CarService implements ICarService {
 
         TypedQuery<RegisteredCarResponse> typedQuery = entityManager.createQuery(query);
         return new HashSet<>(typedQuery.getResultList());
+    }
+
+    @Override
+    public List<CarAdminResponse> findAll() {
+        return carRepository.findAll().stream().map(i ->
+                CarAdminResponse.builder()
+                        .id(i.getId())
+                        .createdDate(i.getCreatedDate())
+                        .color(i.getColor())
+                        .plate(i.getPlate())
+                        .price(i.getService().getDefaultPrice())
+                        .brand(
+                                IdNameResponse.builder()
+                                        .id(i.getBrand().getId())
+                                        .name(i.getBrand().getName())
+                                        .build()
+                        )
+                        .model(
+                                IdNameResponse.builder()
+                                        .id(i.getModel().getId())
+                                        .name(i.getModel().getName())
+                                        .build()
+                        )
+                        .serviceType(
+                                IdNameResponse.builder()
+                                        .id(i.getService().getServiceType().getId())
+                                        .name(i.getService().getServiceType().getName())
+                                        .build()
+                        )
+                        .status(i.getStatus())
+                        .build()
+        ).collect(Collectors.toList());
     }
 }
