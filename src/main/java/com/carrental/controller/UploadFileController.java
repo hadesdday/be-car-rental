@@ -71,7 +71,7 @@ public class UploadFileController {
             APIResponse response = new APIResponse(deletedFileName, "Successfully delete file", 200);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            APIResponse response = new APIResponse(new String(), "Delete file failed", 404);
+            APIResponse response = new APIResponse("", "Delete file failed", 404);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }

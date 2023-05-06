@@ -144,7 +144,7 @@ public class AuthController {
     public ResponseEntity validSignUp(@RequestBody SignUpRequest signUpRequest) {
         boolean isValidPassword = this.userService.checkValidPassword(signUpRequest.getPassword());
         boolean isExistUser = this.userService.checkExistUser(signUpRequest.getUsername());
-        if (isExistUser == true) {
+        if (isExistUser) {
             UserEntity foundUser = this.userService.findByUsername(signUpRequest.getUsername());
             if (foundUser.getStatus().equals(UserStatus.UNACTIVATED)) {
                 foundUser.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
@@ -160,7 +160,7 @@ public class AuthController {
                 return ResponseEntity.ok(response);
             }
         } else {
-            if (isValidPassword == true) {
+            if (isValidPassword) {
                 APIResponse<String> response = new APIResponse<String>("Thông tin hợp lệ", HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
                 UserEntity nonActiveUser = new UserEntity();
                 nonActiveUser.setUsername(signUpRequest.getUsername());

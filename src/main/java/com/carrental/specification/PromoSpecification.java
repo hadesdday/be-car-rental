@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class PromoSpecification implements Specification<PromoEntity> {
 
-    private SearchCriteria criteria;
+    private final SearchCriteria criteria;
 
     public PromoSpecification(SearchCriteria criteria) {
         this.criteria = criteria;

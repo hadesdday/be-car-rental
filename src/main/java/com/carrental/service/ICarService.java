@@ -5,6 +5,7 @@ import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.responsemodel.CarAdminResponse;
 import com.carrental.responsemodel.CarRegisterResponse;
 import com.carrental.responsemodel.RegisteredCarResponse;
+import com.carrental.responsemodel.RentalListingResponse;
 
 import java.util.List;
 import java.util.Set;

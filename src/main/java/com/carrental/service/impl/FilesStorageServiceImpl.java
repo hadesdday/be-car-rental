@@ -19,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FilesStorageServiceImpl implements IFileStorageService {
-    private String UPLOAD_DIR = "src/main/resources/uploads";
-    private Path rootPath = Paths.get(UPLOAD_DIR);
+    private final String UPLOAD_DIR = "src/main/resources/uploads";
+    private final Path rootPath = Paths.get(UPLOAD_DIR);
     private File rootFile;
 
     @Override
