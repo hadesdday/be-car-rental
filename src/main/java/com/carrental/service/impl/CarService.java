@@ -174,10 +174,10 @@ public class CarService implements ICarService {
         //car images join
         Join<CarEntity, CarImagesEntity> imageJoin = root.join("images", JoinType.LEFT);
         imageJoin.on(
-                cb.and(
-                        cb.equal(imageJoin.get("car"), root),
-                        cb.isTrue(imageJoin.get("isThumbnail"))
-                )
+//                cb.and(
+//                        cb.equal(imageJoin.get("car"), root),
+                cb.isTrue(imageJoin.get("isThumbnail"))
+//                )
         );
 
         query.multiselect(
