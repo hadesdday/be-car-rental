@@ -1,5 +1,6 @@
 package com.carrental.controller;
 
+import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.service.ICarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,16 @@ public class CarController {
     public ResponseEntity<?> findAll() {
         try {
             return ResponseEntity.ok().body(service.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/updateCar")
+    public ResponseEntity<?> updateCar(@RequestBody CarAdminRequest request) {
+        try {
+            return ResponseEntity.ok().body(service.updateCar(request));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

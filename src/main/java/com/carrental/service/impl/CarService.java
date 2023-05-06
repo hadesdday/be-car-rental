@@ -1,9 +1,11 @@
 package com.carrental.service.impl;
 
+import com.carrental.constance.ErrorMessage;
 import com.carrental.entity.*;
 import com.carrental.enums.CarStatus;
 import com.carrental.enums.UserStatus;
 import com.carrental.repository.ICarRepository;
+import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.ExtraFeeRequest;
 import com.carrental.responsemodel.CarAdminResponse;
@@ -22,6 +24,7 @@ import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -224,5 +227,54 @@ public class CarService implements ICarService {
                         .status(i.getStatus())
                         .build()
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    public CarAdminResponse updateCar(CarAdminRequest request) throws Exception {
+        Optional<CarEntity> carOptional = carRepository.findById(request.getId());
+        if (!carOptional.isPresent()) throw new Exception(ErrorMessage.NO_CAR_WAS_FOUND);
+        BrandEntity brandEntity = brandService.findById(request.getBrand());
+        if (null == brandEntity) throw new Exception(ErrorMessage.NO_BRAND_WAS_FOUND);
+        ModelEntity modelEntity = modelService.findById(request.getModel());
+        if (null == modelEntity) throw new Exception(ErrorMessage.NO_MODEL_WAS_FOUND);
+        ServiceTypeEntity serviceType = serviceTypeService.findById(request.getServiceType());
+        if (null == serviceType) throw new Exception(ErrorMessage.NO_SERVICE_TYPE_WAS_FOUND);
+
+        CarEntity carEntity = carOptional.get();
+        carEntity.setBrand(brandEntity);
+        carEntity.setModel(modelEntity);
+        ServiceFeeEntity serviceFee = carEntity.getService();
+        serviceFee.setServiceType(serviceType);
+        serviceFee.setDefaultPrice(request.getPrice());
+        carEntity.setService(serviceFee);
+        carEntity.setColor(request.getColor());
+        carEntity.setStatus(request.getStatus());
+        CarEntity updatedCar = carRepository.save(carEntity);
+        return CarAdminResponse.builder()
+                .id(updatedCar.getId())
+                .createdDate(updatedCar.getCreatedDate())
+                .color(updatedCar.getColor())
+                .plate(updatedCar.getPlate())
+                .price(updatedCar.getService().getDefaultPrice())
+                .brand(
+                        IdNameResponse.builder()
+                                .id(updatedCar.getBrand().getId())
+                                .name(updatedCar.getBrand().getName())
+                                .build()
+                )
+                .model(
+                        IdNameResponse.builder()
+                                .id(updatedCar.getModel().getId())
+                                .name(updatedCar.getModel().getName())
+                                .build()
+                )
+                .serviceType(
+                        IdNameResponse.builder()
+                                .id(updatedCar.getService().getServiceType().getId())
+                                .name(updatedCar.getService().getServiceType().getName())
+                                .build()
+                )
+                .status(updatedCar.getStatus())
+                .build();
     }
 }

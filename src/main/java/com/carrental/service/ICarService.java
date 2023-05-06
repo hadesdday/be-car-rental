@@ -1,5 +1,6 @@
 package com.carrental.service;
 
+import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.responsemodel.CarAdminResponse;
 import com.carrental.responsemodel.CarRegisterResponse;
@@ -14,5 +15,8 @@ public interface ICarService {
     CarRegisterResponse registerNewCar(CarRegisterRequest request) throws Exception;
 
     Set<RegisteredCarResponse> findAllRegisteredCar(String username);
+
     List<CarAdminResponse> findAll(); // for admin
+
+    CarAdminResponse updateCar(CarAdminRequest request) throws Exception;
 }
