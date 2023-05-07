@@ -1,9 +1,14 @@
 package com.carrental.service.impl;
 
+import com.carrental.constance.ErrorMessage;
 import com.carrental.entity.*;
+import com.carrental.enums.CarStatus;
+import com.carrental.enums.RentalStatus;
 import com.carrental.repository.ICarRentalRepository;
+import com.carrental.requestmodel.UpdateRentalStatusRequest;
 import com.carrental.responsemodel.RentalDetailsResponse;
 import com.carrental.responsemodel.RentalListingResponse;
+import com.carrental.responsemodel.UpdateRentalStatusResponse;
 import com.carrental.service.ICarRentalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +18,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CarRentalService implements ICarRentalService {
@@ -124,4 +130,84 @@ public class CarRentalService implements ICarRentalService {
         TypedQuery<RentalDetailsResponse> typedQuery = entityManager.createQuery(query);
         return typedQuery.getSingleResult();
     }
+
+    @Override
+    public UpdateRentalStatusResponse acceptRental(UpdateRentalStatusRequest request) throws Exception {
+        Optional<CarRentalEntity> optionalRental = carRentalRepository.findById(request.getId());
+        if (!optionalRental.isPresent()) throw new Exception(ErrorMessage.NO_RENTAL_WAS_FOUND);
+        CarRentalEntity rentalEntity = optionalRental.get();
+        CarEntity carEntity = rentalEntity.getCar();
+        if (carEntity.getStatus() == CarStatus.BANNED ||
+                carEntity.getStatus() == CarStatus.PENDING_APPROVAL)
+            throw new Exception(ErrorMessage.UNABLE_TO_UPDATE_STATUS);
+        carEntity.setStatus(CarStatus.RENTED);
+        rentalEntity.setStatus(RentalStatus.ACCEPTED);
+        rentalEntity.setCar(carEntity);
+        rentalEntity.setModifiedBy(request.getModifiedBy());
+        CarRentalEntity updatedRental = carRentalRepository.save(rentalEntity);
+        return UpdateRentalStatusResponse.builder()
+                .id(updatedRental.getId())
+                .status(updatedRental.getStatus())
+                .modifiedBy(updatedRental.getModifiedBy())
+                .build();
+    }
+
+    @Override
+    public UpdateRentalStatusResponse rejectRental(UpdateRentalStatusRequest request) throws Exception {
+        Optional<CarRentalEntity> optionalRental = carRentalRepository.findById(request.getId());
+        if (!optionalRental.isPresent()) throw new Exception(ErrorMessage.NO_RENTAL_WAS_FOUND);
+        CarRentalEntity rentalEntity = optionalRental.get();
+        CarEntity carEntity = rentalEntity.getCar();
+        if (carEntity.getStatus() == CarStatus.BANNED ||
+                carEntity.getStatus() == CarStatus.PENDING_APPROVAL)
+            throw new Exception(ErrorMessage.UNABLE_TO_UPDATE_STATUS);
+        rentalEntity.setStatus(RentalStatus.REJECTED);
+        rentalEntity.setModifiedBy(request.getModifiedBy());
+        CarRentalEntity updatedRental = carRentalRepository.save(rentalEntity);
+        return UpdateRentalStatusResponse.builder()
+                .id(updatedRental.getId())
+                .status(updatedRental.getStatus())
+                .modifiedBy(updatedRental.getModifiedBy())
+                .build();
+    }
+
+    @Override
+    public UpdateRentalStatusResponse confirmDeliveredCarToRenter(UpdateRentalStatusRequest request) throws Exception {
+        Optional<CarRentalEntity> optionalRental = carRentalRepository.findById(request.getId());
+        if (!optionalRental.isPresent()) throw new Exception(ErrorMessage.NO_RENTAL_WAS_FOUND);
+        CarRentalEntity rentalEntity = optionalRental.get();
+        CarEntity carEntity = rentalEntity.getCar();
+        if (carEntity.getStatus() == CarStatus.BANNED ||
+                carEntity.getStatus() == CarStatus.PENDING_APPROVAL)
+            throw new Exception(ErrorMessage.UNABLE_TO_UPDATE_STATUS);
+        rentalEntity.setStatus(RentalStatus.RENTED);
+        rentalEntity.setModifiedBy(request.getModifiedBy());
+        CarRentalEntity updatedRental = carRentalRepository.save(rentalEntity);
+        return UpdateRentalStatusResponse.builder()
+                .id(updatedRental.getId())
+                .status(updatedRental.getStatus())
+                .modifiedBy(updatedRental.getModifiedBy())
+                .build();
+    }
+
+    @Override
+    public UpdateRentalStatusResponse completeRental(UpdateRentalStatusRequest request) throws Exception {
+        Optional<CarRentalEntity> optionalRental = carRentalRepository.findById(request.getId());
+        if (!optionalRental.isPresent()) throw new Exception(ErrorMessage.NO_RENTAL_WAS_FOUND);
+        CarRentalEntity rentalEntity = optionalRental.get();
+        CarEntity carEntity = rentalEntity.getCar();
+        if (carEntity.getStatus() == CarStatus.BANNED ||
+                carEntity.getStatus() == CarStatus.PENDING_APPROVAL)
+            throw new Exception(ErrorMessage.UNABLE_TO_UPDATE_STATUS);
+        rentalEntity.setStatus(RentalStatus.COMPLETED);
+        rentalEntity.setModifiedBy(request.getModifiedBy());
+        CarRentalEntity updatedRental = carRentalRepository.save(rentalEntity);
+        return UpdateRentalStatusResponse.builder()
+                .id(updatedRental.getId())
+                .status(updatedRental.getStatus())
+                .modifiedBy(updatedRental.getModifiedBy())
+                .build();
+    }
+
+
 }
