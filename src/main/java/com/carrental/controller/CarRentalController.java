@@ -23,4 +23,14 @@ public class CarRentalController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/findById")
+    public ResponseEntity<?> findById(@RequestParam("id") Long id) {
+        try {
+            return ResponseEntity.ok().body(carRentalService.findById(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.carrental.service.impl;
 
 import com.carrental.entity.*;
 import com.carrental.repository.ICarRentalRepository;
+import com.carrental.responsemodel.RentalDetailsResponse;
 import com.carrental.responsemodel.RentalListingResponse;
 import com.carrental.service.ICarRentalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,59 @@ public class CarRentalService implements ICarRentalService {
         );
         TypedQuery<RentalListingResponse> typedQuery = entityManager.createQuery(query);
         return typedQuery.getResultList();
+    }
+
+    @Override
+    public RentalDetailsResponse findById(Long id) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<RentalDetailsResponse> query = cb.createQuery(RentalDetailsResponse.class);
+        Root<CarEntity> root = query.from(CarEntity.class);
+
+        Join<CarEntity, CarRentalEntity> carRentalJoin = root.join("rentals", JoinType.INNER);
+        //car images join
+        Join<CarEntity, CarImagesEntity> imageJoin = root.join("images", JoinType.LEFT);
+        imageJoin.on(
+                cb.and(
+                        cb.equal(imageJoin.get("car"), root),
+                        cb.isTrue(imageJoin.get("isThumbnail"))
+                )
+        );
+
+        //car rating join
+        Join<CarEntity, CarRatingEntity> carRatingJoin = root.join("ratings", JoinType.LEFT);
+
+        Join<CarEntity, ServiceFeeEntity> carServiceFeeJoin = root.join("service");
+        Join<ServiceFeeEntity, ExtraFeeEntity> extraFeeJoin = carServiceFeeJoin.join("extraFeeList");
+
+        query.multiselect(
+                carRentalJoin.get("id"),
+                root.get("model").get("name"),
+                carRentalJoin.get("startDate"),
+                carRentalJoin.get("endDate"),
+                cb.coalesce(cb.avg(carRatingJoin.get("rating")), 0),
+                carRentalJoin.get("user").get("fullName"),
+                carRentalJoin.get("user").get("phone"),
+                carRentalJoin.get("status"),
+                extraFeeJoin.get("limitValue"),
+                carRentalJoin.get("rentalPrice"),
+                imageJoin.get("imageUrl"),
+                carRentalJoin.get("createdDate")
+        ).distinct(true);
+
+        query.where(
+                cb.and(
+                        cb.equal(carRentalJoin.get("id"), id),
+                        cb.equal(extraFeeJoin.get("name"), "Giới hạn số KM")
+                )
+        );
+
+        query.groupBy(
+                root.get("id"),
+                imageJoin.get("imageUrl"),
+                extraFeeJoin.get("limitValue")
+        );
+
+        TypedQuery<RentalDetailsResponse> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getSingleResult();
     }
 }
