@@ -1,9 +1,10 @@
 package com.carrental.enums;
 
 public enum RentalStatus {
+    CANCELLED,
+    REJECTED,
     PENDING,
     ACCEPTED,
-    DELIVERED,
-    RETURNED,
+    RENTED,
     COMPLETED
 }
