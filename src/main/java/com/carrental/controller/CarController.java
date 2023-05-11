@@ -5,6 +5,7 @@ import com.carrental.entity.CarEntity;
 import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.SearchCarRequest;
+import com.carrental.service.ICarImageService;
 import com.carrental.service.ICarService;
 import com.carrental.specification.builder.SearchCarBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/cars")
@@ -118,6 +119,26 @@ public class CarController {
         if (!ObjectUtils.isEmpty(request.getIsFastRent())) {
             builder.with("isFastRent", request.getIsFastRent(), "equals");
         }
+
+        Date[] dateRange = {request.getStartDate(), request.getEndDate()};
+        builder.with("", dateRange, "available");
+
+        if (!ObjectUtils.isEmpty(request.getType())) {
+            builder.with("", request.getType(), "type");
+        }
+
+        if (!ObjectUtils.isEmpty(request.getTransmission())) {
+            builder.with("transmission", request.getTransmission(), "equals");
+        }
+
+        if (!ObjectUtils.isEmpty(request.getFuel())) {
+            builder.with("fuel", request.getFuel(), "equals");
+        }
+
+        if (!ObjectUtils.isEmpty(request.getFuelConsumption())) {
+            builder.with("fuelConsumption", request.getFuel(), "lessThan");
+        }
+
         Specification<CarEntity> spec = builder.build();
 
         Sort sortBy;

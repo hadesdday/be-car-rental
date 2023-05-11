@@ -209,5 +209,10 @@ public class CarRentalService implements ICarRentalService {
                 .build();
     }
 
+    @Override
+    public long countByStatusAndCarId(RentalStatus status, long id) {
+        return carRentalRepository.countByStatusAndCarId(status, id);
+    }
+
 
 }

@@ -2,7 +2,7 @@ package com.carrental.requestmodel;
 
 import lombok.Data;
 
-import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -18,4 +18,10 @@ public class SearchCarRequest {
     private String distanceLimit;
     private List<Long> features;
     private Boolean isFastRent;
+    private Date startDate;
+    private Date endDate;
+    private List<String> type;
+    private String transmission;
+    private String fuel;
+    private Double fuelConsumption;
 }

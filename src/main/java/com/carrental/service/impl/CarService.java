@@ -3,6 +3,7 @@ package com.carrental.service.impl;
 import com.carrental.constance.ErrorMessage;
 import com.carrental.entity.*;
 import com.carrental.enums.CarStatus;
+import com.carrental.enums.RentalStatus;
 import com.carrental.enums.UserStatus;
 import com.carrental.repository.ICarRepository;
 import com.carrental.requestmodel.CarAdminRequest;
@@ -42,6 +43,10 @@ public class CarService implements ICarService {
     private IBrandService brandService;
     @Autowired
     private IFeatureService featureService;
+    @Autowired
+    private ICarRentalService rentalService;
+    @Autowired
+    private ICarImageService imageService;
     @Autowired
     private ModelMapper mapper;
     @PersistenceContext
@@ -285,9 +290,12 @@ public class CarService implements ICarService {
                                 .id(i.getId())
                                 .modelName(i.getModel().getName() + " " + i.getYearOfManufacture())
                                 .yearOfManufacture(i.getYearOfManufacture())
-                                .district(i.getAddress().getDistrict().getName() + ", " + i.getAddress().getProvince().getName())
+                                .location(i.getAddress().getDistrict().getName() + ", " + i.getAddress().getProvince().getName())
                                 .price(i.getService().getDefaultPrice())
                                 .avgRating(i.getAvgRating())
+                                .totalCompletedRental(rentalService.countByStatusAndCarId(RentalStatus.COMPLETED, i.getId()))
+                                .features(i.getFeatures().stream().map(item -> mapper.map(item, FeatureResponse.class)).collect(Collectors.toList()))
+                                .bannerUrl(imageService.findFirstByCarIdAndIsThumbnail(i.getId(), true).getImageUrl())
                                 .build()
                 ).collect(Collectors.toSet());
     }

@@ -2,10 +2,7 @@ package com.carrental.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "car_images")
@@ -19,7 +16,7 @@ public class CarImagesEntity extends BaseEntity {
     private String status;
     private Boolean isThumbnail;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id")
     private CarEntity car;
 }

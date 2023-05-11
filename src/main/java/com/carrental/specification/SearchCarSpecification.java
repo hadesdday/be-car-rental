@@ -2,14 +2,17 @@ package com.carrental.specification;
 
 import com.carrental.constance.SystemConstance;
 import com.carrental.entity.CarEntity;
+import com.carrental.entity.CarRentalEntity;
 import com.carrental.entity.ExtraFeeEntity;
 import com.carrental.entity.ServiceFeeEntity;
 import com.carrental.enums.CarStatus;
+import com.carrental.enums.RentalStatus;
 import com.carrental.specification.criteria.SearchCriteria;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SearchCarSpecification implements Specification<CarEntity> {
@@ -81,8 +84,6 @@ public class SearchCarSpecification implements Specification<CarEntity> {
                 }
                 Expression<Long> expression = root.join("features").get("id");
                 return expression.in(featureLongList);
-//            case "isFastRent"://pls check again with equal
-//                return criteriaBuilder.isTrue(root.get("isFastRent"));
             case "active":
                 return criteriaBuilder.isTrue(
                         criteriaBuilder.equal(root.get("status"), CarStatus.ACTIVE)
@@ -90,6 +91,22 @@ public class SearchCarSpecification implements Specification<CarEntity> {
             case "price":
                 String[] priceRange = String.valueOf(value).split("-");
                 return criteriaBuilder.between(root.get("service").get("defaultPrice"), Integer.valueOf(priceRange[0]), Integer.valueOf(priceRange[1]));
+            case "available":
+                Date[] dateRange = (Date[]) value;
+                Subquery<Long> subquery = query.subquery(Long.class);
+                Root<CarRentalEntity> carRentalRoot = subquery.from(CarRentalEntity.class);
+                subquery.select(carRentalRoot.get("car").get("id"))
+                        .where(criteriaBuilder.or(
+                                        criteriaBuilder.between(carRentalRoot.get("startDate"), dateRange[0], dateRange[1]),
+                                        criteriaBuilder.between(carRentalRoot.get("endDate"), dateRange[0], dateRange[1]),
+                                        criteriaBuilder.lessThan(carRentalRoot.get("startDate"), dateRange[0]),
+                                        criteriaBuilder.greaterThan(carRentalRoot.get("endDate"), dateRange[1])
+                                ),
+                                criteriaBuilder.between(carRentalRoot.get("status"), RentalStatus.PENDING, RentalStatus.RENTED)
+                        );
+                return criteriaBuilder.not(root.get("id").in(subquery));
+            case "type":
+                return root.get("model").get("type").in(value);
             default:
                 return null;
         }
