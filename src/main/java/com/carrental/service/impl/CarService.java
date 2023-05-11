@@ -8,13 +8,12 @@ import com.carrental.repository.ICarRepository;
 import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.ExtraFeeRequest;
-import com.carrental.responsemodel.CarAdminResponse;
-import com.carrental.responsemodel.CarRegisterResponse;
-import com.carrental.responsemodel.IdNameResponse;
-import com.carrental.responsemodel.RegisteredCarResponse;
+import com.carrental.responsemodel.*;
 import com.carrental.service.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -277,4 +276,20 @@ public class CarService implements ICarService {
                 .status(updatedCar.getStatus())
                 .build();
     }
+
+    @Override
+    public Set<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable) {
+        return carRepository.findAll(spec, pageable)
+                .stream().map(i ->
+                        SearchCarResponse.builder()
+                                .id(i.getId())
+                                .modelName(i.getModel().getName() + " " + i.getYearOfManufacture())
+                                .yearOfManufacture(i.getYearOfManufacture())
+                                .district(i.getAddress().getDistrict().getName() + ", " + i.getAddress().getProvince().getName())
+                                .price(i.getService().getDefaultPrice())
+                                .avgRating(i.getAvgRating())
+                                .build()
+                ).collect(Collectors.toSet());
+    }
+
 }

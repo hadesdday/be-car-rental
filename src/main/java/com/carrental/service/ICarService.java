@@ -1,10 +1,11 @@
 package com.carrental.service;
 
+import com.carrental.entity.CarEntity;
 import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
-import com.carrental.responsemodel.CarAdminResponse;
-import com.carrental.responsemodel.CarRegisterResponse;
-import com.carrental.responsemodel.RegisteredCarResponse;
+import com.carrental.responsemodel.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Set;
@@ -19,4 +20,6 @@ public interface ICarService {
     List<CarAdminResponse> findAll(); // for admin
 
     CarAdminResponse updateCar(CarAdminRequest request) throws Exception;
+
+    Set<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable);
 }
