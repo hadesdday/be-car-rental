@@ -24,4 +24,5 @@ public class SearchCarRequest {
     private String transmission;
     private String fuel;
     private Double fuelConsumption;
+    private Long serviceType;
 }

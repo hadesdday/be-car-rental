@@ -112,6 +112,8 @@ public class SearchCarSpecification implements Specification<CarEntity> {
                 return criteriaBuilder.not(root.get("id").in(subquery));
             case "type":
                 return root.get("model").get("type").in(value);
+            case "serviceType":
+                return criteriaBuilder.equal(root.get("service").get("serviceType").get("id"), value);
             default:
                 return null;
         }

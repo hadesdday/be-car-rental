@@ -144,6 +144,9 @@ public class CarController {
             builder.with("fuelConsumption", request.getFuelConsumption(), "lessThan");
         }
 
+        long serviceType = request.getServiceType();
+        builder.with("", serviceType, "serviceType");
+
         Specification<CarEntity> spec = builder.build();
 
         Sort sortBy;
