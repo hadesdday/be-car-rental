@@ -21,5 +21,5 @@ public interface ICarService {
 
     CarAdminResponse updateCar(CarAdminRequest request) throws Exception;
 
-    Set<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable);
+    List<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable);
 }

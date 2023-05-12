@@ -48,6 +48,8 @@ public class CarService implements ICarService {
     @Autowired
     private ICarImageService imageService;
     @Autowired
+    private IExtraFeeService extraFeeService;
+    @Autowired
     private ModelMapper mapper;
     @PersistenceContext
     private EntityManager entityManager;
@@ -283,7 +285,7 @@ public class CarService implements ICarService {
     }
 
     @Override
-    public Set<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable) {
+    public List<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable) {
         return carRepository.findAll(spec, pageable)
                 .stream().map(i ->
                         SearchCarResponse.builder()
@@ -296,8 +298,11 @@ public class CarService implements ICarService {
                                 .totalCompletedRental(rentalService.countByStatusAndCarId(RentalStatus.COMPLETED, i.getId()))
                                 .features(i.getFeatures().stream().map(item -> mapper.map(item, FeatureResponse.class)).collect(Collectors.toList()))
                                 .bannerUrl(imageService.findFirstByCarIdAndIsThumbnail(i.getId(), true).getImageUrl())
+                                .transmission(i.getTransmission())
+                                .deliveryToTenantFee(extraFeeService.findDeliveryToTenantFee(i.getService().getId()))
+                                .type(i.getModel().getType())
                                 .build()
-                ).collect(Collectors.toSet());
+                ).collect(Collectors.toList());
     }
 
 }

@@ -34,9 +34,9 @@ public class SearchCarSpecification implements Specification<CarEntity> {
             case "equals":
                 return criteriaBuilder.equal(root.get(key), value);
             case "greaterThan":
-                return criteriaBuilder.greaterThanOrEqualTo(root.get(key), Integer.valueOf(value.toString()));
+                return criteriaBuilder.greaterThanOrEqualTo(root.get(key), value.toString());
             case "lessThan":
-                return criteriaBuilder.lessThanOrEqualTo(root.get(key), Integer.valueOf(value.toString()));
+                return criteriaBuilder.lessThanOrEqualTo(root.get(key), value.toString());
             case "between":
                 String[] range = String.valueOf(value).split("-");
                 return criteriaBuilder.between(root.get(key), Integer.valueOf(range[0]), Integer.valueOf(range[1]));
@@ -75,6 +75,11 @@ public class SearchCarSpecification implements Specification<CarEntity> {
                         criteriaBuilder.equal(joins.get("name"), "Giới hạn số KM"),
                         criteriaBuilder.greaterThan(joins.get("limitValue"), limitVal),
                         criteriaBuilder.between(joins.get("fee"), 0, overLimitFeeRange)
+                );
+            case "noDistanceLimit":
+                Join<ServiceFeeEntity, ExtraFeeEntity> seJoin = root.join("service").join("extraFeeList");
+                return criteriaBuilder.and(
+                        criteriaBuilder.notEqual(seJoin.get("name"), "Giới hạn số KM")
                 );
             case "features":
                 String[] featureList = String.valueOf(value).split("-");

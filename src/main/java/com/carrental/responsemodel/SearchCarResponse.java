@@ -22,4 +22,7 @@ public class SearchCarResponse {
     private Long totalCompletedRental;
     private List<FeatureResponse> features;
     private String bannerUrl;
+    private String transmission;
+    private BigInteger deliveryToTenantFee;
+    private String type;
 }

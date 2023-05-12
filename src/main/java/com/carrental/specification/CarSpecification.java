@@ -3,6 +3,7 @@ package com.carrental.specification;
 import com.carrental.entity.CarEntity;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
