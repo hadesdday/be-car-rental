@@ -71,9 +71,17 @@ public class CarController {
     public ResponseEntity<?> searchCar(@RequestBody SearchCarRequest request) {
         SearchCarBuilder builder = new SearchCarBuilder();
         builder
-                .with("", request.getAddress(), "address")
                 .with("", "", "active")
         ;
+
+        if (request.getServiceType() != 3) {
+            builder.with("", request.getAddress(), "address");
+        } else {
+            builder.with("", request.getAddressWithDriver(), "addressWithDriver");
+        }
+
+        builder.with("", request.getServiceType(), "serviceType");
+
         if (request.getSeats() != null) {
             String value = request.getSeats();//already in between format (x-x)
             if (value.contains(">")) {
@@ -143,9 +151,6 @@ public class CarController {
         if (!ObjectUtils.isEmpty(request.getFuelConsumption())) {
             builder.with("fuelConsumption", request.getFuelConsumption(), "lessThan");
         }
-
-        long serviceType = request.getServiceType();
-        builder.with("", serviceType, "serviceType");
 
         Specification<CarEntity> spec = builder.build();
 

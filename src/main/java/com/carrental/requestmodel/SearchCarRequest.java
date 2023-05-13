@@ -25,4 +25,5 @@ public class SearchCarRequest {
     private String fuel;
     private Double fuelConsumption;
     private Long serviceType;
+    private String[] addressWithDriver;
 }

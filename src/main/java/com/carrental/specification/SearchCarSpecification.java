@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +42,29 @@ public class SearchCarSpecification implements Specification<CarEntity> {
                 String[] range = String.valueOf(value).split("-");
                 return criteriaBuilder.between(root.get(key), Integer.valueOf(range[0]), Integer.valueOf(range[1]));
             case "address":
-                return criteriaBuilder.like(root.get("address").get("addressName"), "%" + value.toString() + "%");
+                String[] splitWords = value.toString().split(" ");
+                List<Predicate> predicates = new ArrayList<>();
+
+                for (String s : splitWords) {
+                    predicates.add(criteriaBuilder.like(root.get("address").get("addressName"), "%" + s + "%"));
+                }
+                return criteriaBuilder.or(predicates.toArray(new Predicate[0]));
+//            return criteriaBuilder.like(root.get("address").get("addressName"), "%" + value.toString() + "%");
+            case "addressWithDriver":
+                String[] addressArray = (String[]) value;
+                String[] startPoint = addressArray[0].split(" ");
+                String[] endPoint = addressArray[1].split(" ");
+
+                List<Predicate> addressPredicates = new ArrayList<>();
+
+                for (String s : startPoint) {
+                    addressPredicates.add(criteriaBuilder.like(root.get("address").get("addressName"), "%" + s + "%"));
+                }
+
+                for (String s : endPoint) {
+                    addressPredicates.add(criteriaBuilder.like(root.get("address").get("addressName"), "%" + s + "%"));
+                }
+                return criteriaBuilder.or(addressPredicates.toArray(new Predicate[0]));
             case "brand":
                 return criteriaBuilder.equal(root.get("brand").get("id"), Long.valueOf(value.toString()));
             case "discount":
