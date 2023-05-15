@@ -125,6 +125,10 @@ public class SearchCarSpecification implements Specification<CarEntity> {
                 Root<CarRentalEntity> carRentalRoot = subquery.from(CarRentalEntity.class);
                 subquery.select(carRentalRoot.get("car").get("id"))
                         .where(criteriaBuilder.or(
+//                                        criteriaBuilder.greaterThan(carRentalRoot.get("startDate"), dateRange[0]),
+//                                        criteriaBuilder.greaterThan(carRentalRoot.get("startDate"), dateRange[1]),
+//                                        criteriaBuilder.greaterThan(carRentalRoot.get("endDate"), dateRange[0]),
+//                                        criteriaBuilder.greaterThan(carRentalRoot.get("endDate"), dateRange[1])
                                         criteriaBuilder.between(carRentalRoot.get("startDate"), dateRange[0], dateRange[1]),
                                         criteriaBuilder.between(carRentalRoot.get("endDate"), dateRange[0], dateRange[1]),
                                         criteriaBuilder.lessThan(carRentalRoot.get("startDate"), dateRange[0]),

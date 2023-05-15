@@ -170,4 +170,12 @@ public class CarController {
         Pageable pageable = PageRequest.of(request.getPageNo(), 10, sortBy);
         return ResponseEntity.ok(service.searchCar(spec, pageable));
     }
+
+    @PostMapping("/asdsa")
+    public ResponseEntity<?> asdsa(@RequestBody Date[] date) {
+        SearchCarBuilder builder = new SearchCarBuilder();
+        builder.with("", date, "available");
+
+        return ResponseEntity.ok(service.checkAvailable(builder.build()));
+    }
 }
