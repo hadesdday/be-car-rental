@@ -2,13 +2,10 @@ package com.carrental.controller;
 
 import com.carrental.constance.SystemConstance;
 import com.carrental.entity.CarEntity;
-import com.carrental.repository.IExtraFeeRepository;
 import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.SearchCarRequest;
-import com.carrental.service.ICarImageService;
 import com.carrental.service.ICarService;
-import com.carrental.service.IExtraFeeService;
 import com.carrental.specification.builder.SearchCarBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
