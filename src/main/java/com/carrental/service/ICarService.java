@@ -23,5 +23,4 @@ public interface ICarService {
 
     List<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable);
 
-    List<IdNameResponse> checkAvailable(Specification<CarEntity> spec);
 }

@@ -321,14 +321,4 @@ public class CarService implements ICarService {
         ).collect(Collectors.toList());
     }
 
-    @Override
-    public List<IdNameResponse> checkAvailable(Specification<CarEntity> spec) {
-        return carRepository.findAll(spec)
-                .stream().map(i ->
-                        IdNameResponse.builder()
-                                .id(i.getId())
-                                .name(i.getPlate())
-                                .build()
-                ).collect(Collectors.toList());
-    }
 }
