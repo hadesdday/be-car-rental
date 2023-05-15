@@ -6,6 +6,7 @@ import com.carrental.enums.CarStatus;
 import com.carrental.enums.RentalStatus;
 import com.carrental.repository.ICarRentalRepository;
 import com.carrental.requestmodel.UpdateRentalStatusRequest;
+import com.carrental.responsemodel.CalendarListingResponse;
 import com.carrental.responsemodel.RentalDetailsResponse;
 import com.carrental.responsemodel.RentalListingResponse;
 import com.carrental.responsemodel.UpdateRentalStatusResponse;
@@ -19,6 +20,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CarRentalService implements ICarRentalService {
@@ -212,6 +214,20 @@ public class CarRentalService implements ICarRentalService {
     @Override
     public long countByStatusAndCarId(RentalStatus status, long id) {
         return carRentalRepository.countByStatusAndCarId(status, id);
+    }
+
+    @Override
+    public List<CalendarListingResponse> findCalendarByOwner(String username) {
+        return carRentalRepository.getAllByCarUserUsername(username).stream().map(
+                i -> CalendarListingResponse.builder()
+                        .startDate(i.getStartDate())
+                        .endDate(i.getEndDate())
+                        .modelName(i.getCar().getModel().getName())
+                        .rentalPrice(i.getRentalPrice())
+                        .plate(i.getCar().getPlate())
+                        .status(i.getStatus())
+                        .build()
+        ).collect(Collectors.toList());
     }
 
 

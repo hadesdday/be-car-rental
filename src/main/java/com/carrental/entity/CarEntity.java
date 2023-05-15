@@ -67,7 +67,11 @@ public class CarEntity extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "car", targetEntity = CarImagesEntity.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CarImagesEntity> images;
 
+    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY)
+    private List<RepeatedCalendarEntity> repeatedCalendars;
+
     private Double avgRating;
+
 
     @PostLoad
     public void setAvgRating() {

@@ -21,11 +21,11 @@ public class CarRentalEntity extends BaseEntity {
 
     private BigDecimal rentalPrice;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id")
     private CarEntity car;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // renter id
     private UserEntity user;
 }
