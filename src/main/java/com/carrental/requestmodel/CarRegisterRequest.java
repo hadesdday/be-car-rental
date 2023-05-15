@@ -35,4 +35,7 @@ public class CarRegisterRequest {
     private Long serviceTypeId;//wd;self-drive
     private String policies;
     private List<String> imagesList;
+    private Long wardId;
+    private Long districtId;
+    private Long provinceId;
 }

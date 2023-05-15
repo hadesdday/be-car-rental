@@ -27,8 +27,11 @@ public class WebConfig implements WebMvcConfigurer {
 //        registry.addResourceHandler("/uploads/feature-icon/**")
 //                .addResourceLocations("file:/Users/huynhhuy/Documents/Coding-Project/Back-end/be-car-rental/src/main/resources/uploads/feature-icon/");
         registry.addResourceHandler("/uploads/feature-icon/**")
-                .addResourceLocations("classpath:/uploads/feature-icon/");
+//                .addResourceLocations("classpath:/uploads/feature-icon/");
+                .addResourceLocations("file:///" + System.getProperty("user.dir") + "/src/main/resources/uploads/feature-icon/");
+
         registry.addResourceHandler("/uploads/car/**")
-                .addResourceLocations("classpath:/uploads/");
+//                .addResourceLocations("classpath:/uploads/")
+                .addResourceLocations("file:///" + System.getProperty("user.dir") + "/src/main/resources/uploads/");
     }
 }

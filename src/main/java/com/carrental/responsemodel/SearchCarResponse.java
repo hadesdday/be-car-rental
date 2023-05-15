@@ -25,4 +25,5 @@ public class SearchCarResponse {
     private String transmission;
     private BigInteger deliveryToTenantFee;
     private String type;
+    private Integer totalPages;
 }

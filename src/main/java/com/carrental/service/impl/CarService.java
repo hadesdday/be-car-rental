@@ -13,6 +13,7 @@ import com.carrental.responsemodel.*;
 import com.carrental.service.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,12 @@ public class CarService implements ICarService {
     private IExtraFeeService extraFeeService;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private DistrictService districtService;
+    @Autowired
+    private WardService wardService;
+    @Autowired
+    private ProvinceService provinceService;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -92,8 +99,15 @@ public class CarService implements ICarService {
 
         serviceFee.setExtraFeeList(extraFees);
 
+        WardEntity ward = wardService.findById(request.getWardId());
+        DistrictEntity district = districtService.findById(request.getDistrictId());
+        ProvinceEntity province = provinceService.findById(request.getProvinceId());
+
         DeliveryAddressEntity address = DeliveryAddressEntity.builder()
                 .addressName(request.getAddressName())
+                .ward(ward)
+                .district(district)
+                .province(province)
                 .build();
 
         CarEntity carEntity = CarEntity.builder()
@@ -286,23 +300,25 @@ public class CarService implements ICarService {
 
     @Override
     public List<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable) {
-        return carRepository.findAll(spec, pageable)
-                .stream().map(i ->
-                        SearchCarResponse.builder()
-                                .id(i.getId())
-                                .modelName(i.getModel().getName() + " " + i.getYearOfManufacture())
-                                .yearOfManufacture(i.getYearOfManufacture())
-                                .location(i.getAddress().getDistrict().getName() + ", " + i.getAddress().getProvince().getName())
-                                .price(i.getService().getDefaultPrice())
-                                .avgRating(i.getAvgRating())
-                                .totalCompletedRental(rentalService.countByStatusAndCarId(RentalStatus.COMPLETED, i.getId()))
-                                .features(i.getFeatures().stream().map(item -> mapper.map(item, FeatureResponse.class)).collect(Collectors.toList()))
-                                .bannerUrl(imageService.findFirstByCarIdAndIsThumbnail(i.getId(), true).getImageUrl())
-                                .transmission(i.getTransmission())
-                                .deliveryToTenantFee(extraFeeService.findDeliveryToTenantFee(i.getService().getId()))
-                                .type(i.getModel().getType())
-                                .build()
-                ).collect(Collectors.toList());
+        Page<CarEntity> page = carRepository.findAll(spec, pageable);
+        int totalPages = page.getTotalPages();
+        return page.getContent().stream().map(i ->
+                SearchCarResponse.builder()
+                        .id(i.getId())
+                        .modelName(i.getModel().getName() + " " + i.getYearOfManufacture())
+                        .yearOfManufacture(i.getYearOfManufacture())
+                        .location(i.getAddress().getDistrict().getName() + ", " + i.getAddress().getProvince().getName())
+                        .price(i.getService().getDefaultPrice())
+                        .avgRating(i.getAvgRating())
+                        .totalCompletedRental(rentalService.countByStatusAndCarId(RentalStatus.COMPLETED, i.getId()))
+                        .features(i.getFeatures().stream().map(item -> mapper.map(item, FeatureResponse.class)).collect(Collectors.toList()))
+                        .bannerUrl(imageService.findFirstByCarIdAndIsThumbnail(i.getId(), true).getImageUrl())
+                        .transmission(i.getTransmission())
+                        .deliveryToTenantFee(extraFeeService.findDeliveryToTenantFee(i.getService().getId()))
+                        .type(i.getModel().getType())
+                        .totalPages(totalPages)
+                        .build()
+        ).collect(Collectors.toList());
     }
 
 }

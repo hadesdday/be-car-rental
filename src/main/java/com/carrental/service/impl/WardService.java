@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,5 +26,12 @@ public class WardService implements IWardService {
         Specification<WardEntity> spec = Specification.where(WardSpecification.hasDistrictAndProvinceId(provinceId, districtId));
         return wardRepository.findAll(spec)
                 .stream().map(i -> mapper.map(i, WardResponse.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public WardEntity findById(Long id) throws Exception {
+        Optional<WardEntity> ward = wardRepository.findById(id);
+        if (!ward.isPresent()) throw new Exception("No ward was found !");
+        return ward.get();
     }
 }

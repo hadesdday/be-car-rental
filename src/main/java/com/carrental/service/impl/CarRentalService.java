@@ -108,7 +108,7 @@ public class CarRentalService implements ICarRentalService {
                 carRentalJoin.get("user").get("fullName"),
                 carRentalJoin.get("user").get("phone"),
                 carRentalJoin.get("status"),
-                extraFeeJoin.get("limitValue"),
+                cb.coalesce(extraFeeJoin.get("limitValue"), 0),
                 carRentalJoin.get("rentalPrice"),
                 imageJoin.get("imageUrl"),
                 carRentalJoin.get("createdDate")
