@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ICarRepository extends JpaRepository<CarEntity, Long>, JpaSpecificationExecutor<CarEntity> {
-    List<CarEntity> findByPlate(String plate);
+    CarEntity findFirstByPlate(String plate);
 }

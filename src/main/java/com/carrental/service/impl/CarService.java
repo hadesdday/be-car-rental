@@ -64,9 +64,9 @@ public class CarService implements ICarService {
     @Override
     @Transactional
     public String findByPlate(String plate) {
-        List<CarEntity> list = carRepository.findByPlate(plate);
-        if (list.size() < 1) return "";
-        return list.get(0).getPlate();
+        CarEntity car = carRepository.findFirstByPlate(plate);
+        if (null == car) return "";
+        return car.getPlate();
     }
 
     @Override
