@@ -11,5 +11,5 @@ import java.util.List;
 public interface ICarRentalRepository extends JpaRepository<CarRentalEntity, Long> {
     long countByStatusAndCarId(RentalStatus status, Long carId);
 
-    List<CarRentalEntity> getAllByCarUserUsername(String username);
+    List<CarRentalEntity> getAllByCarUserUsernameAndStatusIsBetween(String username, RentalStatus status1, RentalStatus status2);
 }

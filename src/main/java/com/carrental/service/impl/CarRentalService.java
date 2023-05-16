@@ -218,16 +218,18 @@ public class CarRentalService implements ICarRentalService {
 
     @Override
     public List<CalendarListingResponse> findCalendarByOwner(String username) {
-        return carRentalRepository.getAllByCarUserUsername(username).stream().map(
-                i -> CalendarListingResponse.builder()
-                        .startDate(i.getStartDate())
-                        .endDate(i.getEndDate())
-                        .modelName(i.getCar().getModel().getName())
-                        .rentalPrice(i.getRentalPrice())
-                        .plate(i.getCar().getPlate())
-                        .status(i.getStatus())
-                        .build()
-        ).collect(Collectors.toList());
+        return carRentalRepository.getAllByCarUserUsernameAndStatusIsBetween(username, RentalStatus.PENDING, RentalStatus.RENTED)
+                .stream().map(
+                        i -> CalendarListingResponse.builder()
+                                .startDate(i.getStartDate())
+                                .endDate(i.getEndDate())
+                                .yearOfManufacture(i.getCar().getYearOfManufacture())
+                                .modelName(i.getCar().getModel().getName())
+                                .rentalPrice(i.getRentalPrice())
+                                .plate(i.getCar().getPlate())
+                                .status(i.getStatus())
+                                .build()
+                ).collect(Collectors.toList());
     }
 
 

@@ -17,6 +17,7 @@ public class CalendarListingResponse {
     private Date startDate;
     private Date endDate;
     private String modelName;
+    private Integer yearOfManufacture;
     private BigDecimal rentalPrice;
     private String plate;
     private RentalStatus status;
