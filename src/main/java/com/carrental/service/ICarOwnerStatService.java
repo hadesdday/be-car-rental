@@ -1,7 +1,9 @@
 package com.carrental.service;
 
-import java.util.List;
+import com.carrental.responsemodel.CarOwnerStatResponse;
 
 public interface ICarOwnerStatService {
-    List<Object[]> getStatByOwner(String username);
+    CarOwnerStatResponse getStatByOwner(String username);
+
+
 }

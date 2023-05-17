@@ -4,6 +4,7 @@ import com.carrental.entity.CarEntity;
 import com.carrental.entity.CarRatingEntity;
 import com.carrental.entity.CarRentalEntity;
 import com.carrental.enums.RentalStatus;
+import com.carrental.responsemodel.CarOwnerStatResponse;
 import com.carrental.service.ICarOwnerStatService;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import java.util.List;
+import java.math.BigDecimal;
 
 @Service
 public class CarOwnerStatService implements ICarOwnerStatService {
@@ -19,16 +20,17 @@ public class CarOwnerStatService implements ICarOwnerStatService {
     private EntityManager entityManager;
 
     @Override
-    public List<Object[]> getStatByOwner(String username) {
+    public CarOwnerStatResponse getStatByOwner(String username) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
+        CriteriaQuery<CarOwnerStatResponse> query = cb.createQuery(CarOwnerStatResponse.class);
         Root<CarEntity> root = query.from(CarEntity.class);
 
         //for avg rating
         Join<CarEntity, CarRatingEntity> carRatingJoin = root.join("ratings");
+        Expression<Double> avgRating = cb.avg(carRatingJoin.get("rating"));
 
         // for total revenue ( all time )
-        Subquery<Long> totalCompletedRentalSubquery = query.subquery(Long.class);
+        Subquery<Number> totalCompletedRentalSubquery = query.subquery(Number.class);
         Root<CarRentalEntity> carRentalRoot = totalCompletedRentalSubquery.from(CarRentalEntity.class);
         totalCompletedRentalSubquery.select(cb.sum(carRentalRoot.get("rentalPrice")))
                 .where(
@@ -65,6 +67,7 @@ public class CarOwnerStatService implements ICarOwnerStatService {
                 );
         Expression<Number> acceptedRating = cb.quot(totalAcceptedRentalSubquery.getSelection(), totalRentalSubquery.getSelection());
         Expression<Number> acceptedRatingInPercentage = cb.prod(acceptedRating, 100);
+        Expression<Long> acceptedRatingInLong = acceptedRatingInPercentage.as(Long.class);
 
         //for cancel rental rating
         Subquery<Long> totalCancelledRentalSubquery = query.subquery(Long.class);
@@ -76,20 +79,23 @@ public class CarOwnerStatService implements ICarOwnerStatService {
                 );
         Expression<Number> cancelledRating = cb.quot(totalCancelledRentalSubquery.getSelection(), totalRentalSubquery.getSelection());
         Expression<Number> cancelledRatingInPercentage = cb.prod(cancelledRating, 100);
+        Expression<Long> cancelledRatingInLong = cancelledRatingInPercentage.as(Long.class);
 
         query.multiselect(
-                cb.coalesce(cb.avg(carRatingJoin.get("rating")), 0),
+                cb.coalesce(avgRating, 0),
                 cb.coalesce(totalCompletedRentalSubquery.getSelection(), 0),
                 cb.coalesce(totalRentalSubquery.getSelection(), 0),
                 cb.coalesce(totalCarSubquery.getSelection(), 0),
-                cb.coalesce(acceptedRatingInPercentage, 0),
-                cb.coalesce(cancelledRatingInPercentage, 0)
+                cb.coalesce(acceptedRatingInLong, 0),
+                cb.coalesce(cancelledRatingInLong, 0)
         ).distinct(true);
         query.where(
                 cb.equal(root.get("user").get("username"), username)
         );
 
-        TypedQuery<Object[]> typedQuery = entityManager.createQuery(query);
-        return typedQuery.getResultList();
+        TypedQuery<CarOwnerStatResponse> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getSingleResult();
     }
+
+
 }
