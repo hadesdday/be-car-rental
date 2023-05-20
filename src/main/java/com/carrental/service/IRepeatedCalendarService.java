@@ -1,6 +1,7 @@
 package com.carrental.service;
 
 import com.carrental.requestmodel.CustomPriceRequest;
+import com.carrental.requestmodel.DeleteRepeatedCalendarRequest;
 import com.carrental.requestmodel.RepeatedCalendarDayRequest;
 import com.carrental.responsemodel.CustomPriceResponse;
 import com.carrental.responsemodel.PriceRepeatedCalendarResponse;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface IRepeatedCalendarService {
     CustomPriceResponse saveCustomPrice(CustomPriceRequest request) throws Exception;
 
-    CustomPriceResponse findById(Long id) throws Exception;
+    void deleteCustomPrice(DeleteRepeatedCalendarRequest request) throws Exception;
 
     List<CustomPriceResponse> findAllCustomPriceByOwner(String username, Long carId) throws Exception;
 

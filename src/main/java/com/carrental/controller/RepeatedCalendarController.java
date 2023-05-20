@@ -1,14 +1,14 @@
 package com.carrental.controller;
 
 import com.carrental.requestmodel.CustomPriceRequest;
+import com.carrental.requestmodel.DeleteRepeatedCalendarRequest;
 import com.carrental.requestmodel.PriceRepeatedCalendarRequest;
 import com.carrental.requestmodel.RepeatedCalendarDayRequest;
+import com.carrental.responsemodel.APIResponse;
 import com.carrental.service.IRepeatedCalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @RestController
 @RequestMapping("/api/calendar")
@@ -49,6 +49,18 @@ public class RepeatedCalendarController {
     public ResponseEntity<?> getPriceByDate(@RequestBody RepeatedCalendarDayRequest request) {
         try {
             return ResponseEntity.ok(repeatedCalendarService.findByCarIdAndStartDate(request));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/deleteCustomPrice")
+    public ResponseEntity<?> deleteCustomPrice(@RequestBody DeleteRepeatedCalendarRequest request) {
+        try {
+            repeatedCalendarService.deleteCustomPrice(request);
+            APIResponse response = new APIResponse(new String("Deleted"), "Xóa điều chỉnh thành công", 200);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

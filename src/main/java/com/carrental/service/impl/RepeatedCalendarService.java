@@ -6,6 +6,7 @@ import com.carrental.entity.RepeatedCalendarEntity;
 import com.carrental.enums.RepeatedCalendarType;
 import com.carrental.repository.IRepeatedCalendarRepository;
 import com.carrental.requestmodel.CustomPriceRequest;
+import com.carrental.requestmodel.DeleteRepeatedCalendarRequest;
 import com.carrental.requestmodel.RepeatedCalendarDayRequest;
 import com.carrental.responsemodel.*;
 import com.carrental.service.ICarService;
@@ -59,8 +60,11 @@ public class RepeatedCalendarService implements IRepeatedCalendarService {
     }
 
     @Override
-    public CustomPriceResponse findById(Long id) throws Exception {
-        return null;
+    public void deleteCustomPrice(DeleteRepeatedCalendarRequest request) throws Exception {
+        RepeatedCalendarEntity repeatedCalendar = repeatedCalendarRepository.findFirstByCarIdAndTypeAndStartDateEqualsAndEndDateEquals(
+                request.getCarId(), RepeatedCalendarType.PRICE, request.getStartDate(), request.getEndDate());
+        if (repeatedCalendar == null) throw new Exception(ErrorMessage.NO_DATA_WAS_FOUND);
+        repeatedCalendarRepository.delete(repeatedCalendar);
     }
 
     @Override
@@ -89,10 +93,6 @@ public class RepeatedCalendarService implements IRepeatedCalendarService {
         CriteriaQuery<DateValueResponse> query = cb.createQuery(DateValueResponse.class);
         Root<RepeatedCalendarEntity> root = query.from(RepeatedCalendarEntity.class);
 
-//        List<RepeatedCalendarEntity> repeatedCalendarList = repeatedCalendarRepository.findAllByCarIdAndTypeAndStartDateOrEndDateGreaterThanEqual(carId,
-//                RepeatedCalendarType.PRICE, startDate, endDate);
-
-        Join<CarEntity, RepeatedCalendarEntity> carEntityRepeatedCalendarEntityJoin = root.join("car");
         query.where(
                 cb.equal(root.get("car").get("id"), carId),
                 cb.and(
@@ -110,15 +110,6 @@ public class RepeatedCalendarService implements IRepeatedCalendarService {
         priceList = (typedQuery.getResultList());
 
         BigInteger defaultPrice = car.get().getService().getDefaultPrice();
-
-//        if (repeatedCalendarList.size() > 0) {
-//            for (RepeatedCalendarEntity calendar : repeatedCalendarList) {
-//                priceList.add(DateValueResponse.builder()
-//                        .date(calendar.getStartDate())
-//                        .value(calendar.getValue())
-//                        .build());
-//            }
-//        }
 
         return PriceRepeatedCalendarResponse.builder()
                 .carId(car.get().getId())
