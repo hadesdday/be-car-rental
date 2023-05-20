@@ -321,4 +321,9 @@ public class CarService implements ICarService {
         ).collect(Collectors.toList());
     }
 
+    @Override
+    public Optional<CarEntity> findById(Long id) {
+        return carRepository.findById(id);
+    }
+
 }

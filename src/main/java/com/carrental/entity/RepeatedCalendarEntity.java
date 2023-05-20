@@ -3,14 +3,16 @@ package com.carrental.entity;
 
 import com.carrental.enums.RepeatedCalendarPriority;
 import com.carrental.enums.RepeatedCalendarType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "repeated_calendar")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class RepeatedCalendarEntity extends BaseEntity {

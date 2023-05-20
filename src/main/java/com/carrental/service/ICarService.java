@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface ICarService {
@@ -23,4 +24,5 @@ public interface ICarService {
 
     List<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable);
 
+    Optional<CarEntity> findById(Long id);
 }
