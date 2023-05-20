@@ -232,5 +232,22 @@ public class CarRentalService implements ICarRentalService {
                 ).collect(Collectors.toList());
     }
 
+    @Override
+    public List<CalendarListingResponse> findCalendarByOwnerAndCarId(String username, Long carId) {
+        return carRentalRepository.getAllByCarUserUsernameAndCarIdAndStatusIsBetween(username, carId,
+                        RentalStatus.PENDING, RentalStatus.RENTED)
+                .stream().map(
+                        i -> CalendarListingResponse.builder()
+                                .startDate(i.getStartDate())
+                                .endDate(i.getEndDate())
+                                .yearOfManufacture(i.getCar().getYearOfManufacture())
+                                .modelName(i.getCar().getModel().getName())
+                                .rentalPrice(i.getRentalPrice())
+                                .plate(i.getCar().getPlate())
+                                .status(i.getStatus())
+                                .build()
+                ).collect(Collectors.toList());
+    }
+
 
 }

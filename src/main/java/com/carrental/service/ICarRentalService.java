@@ -15,9 +15,16 @@ public interface ICarRentalService {
     RentalDetailsResponse findById(Long id);
 
     UpdateRentalStatusResponse acceptRental(UpdateRentalStatusRequest request) throws Exception;
+
     UpdateRentalStatusResponse rejectRental(UpdateRentalStatusRequest request) throws Exception;
+
     UpdateRentalStatusResponse confirmDeliveredCarToRenter(UpdateRentalStatusRequest request) throws Exception;
+
     UpdateRentalStatusResponse completeRental(UpdateRentalStatusRequest request) throws Exception;
-    long countByStatusAndCarId(RentalStatus status,long id);
+
+    long countByStatusAndCarId(RentalStatus status, long id);
+
     List<CalendarListingResponse> findCalendarByOwner(String username);
+
+    List<CalendarListingResponse> findCalendarByOwnerAndCarId(String username, Long carId);
 }

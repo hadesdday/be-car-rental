@@ -76,4 +76,9 @@ public class CarRentalController {
     public ResponseEntity<?> findAllCalendar(@RequestParam("username") String username) {
         return ResponseEntity.ok(carRentalService.findCalendarByOwner(username));
     }
+
+    @GetMapping("/findAllCalendarByCarOwner")
+    public ResponseEntity<?> findAllCalendarByCarOwner(@RequestParam("username") String username, @RequestParam("carId") Long carId) {
+        return ResponseEntity.ok(carRentalService.findCalendarByOwnerAndCarId(username, carId));
+    }
 }

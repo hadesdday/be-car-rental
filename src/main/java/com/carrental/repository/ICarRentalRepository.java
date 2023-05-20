@@ -12,4 +12,7 @@ public interface ICarRentalRepository extends JpaRepository<CarRentalEntity, Lon
     long countByStatusAndCarId(RentalStatus status, Long carId);
 
     List<CarRentalEntity> getAllByCarUserUsernameAndStatusIsBetween(String username, RentalStatus status1, RentalStatus status2);
+
+    List<CarRentalEntity> getAllByCarUserUsernameAndCarIdAndStatusIsBetween(String username, Long carId,
+                                                                            RentalStatus status1, RentalStatus status2);
 }
