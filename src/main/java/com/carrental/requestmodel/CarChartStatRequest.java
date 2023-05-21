@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class CarOwnerChartStatRequest {
+public class CarChartStatRequest {
     private String username;
     private Date startDate;
     private Date endDate;

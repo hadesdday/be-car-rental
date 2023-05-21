@@ -5,9 +5,10 @@ import com.carrental.entity.CarRatingEntity;
 import com.carrental.entity.CarRentalEntity;
 import com.carrental.enums.ChartCategory;
 import com.carrental.enums.RentalStatus;
-import com.carrental.responsemodel.CarOwnerChartStatResponse;
+import com.carrental.responsemodel.CarChartStatResponse;
+import com.carrental.responsemodel.CarChartStatResponse;
 import com.carrental.responsemodel.CarOwnerStatResponse;
-import com.carrental.service.ICarOwnerStatService;
+import com.carrental.service.ICarStatService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -15,12 +16,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 @Service
-public class CarOwnerStatService implements ICarOwnerStatService {
+public class CarStatService implements ICarStatService {
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -103,9 +103,9 @@ public class CarOwnerStatService implements ICarOwnerStatService {
     }
 
     @Override
-    public List<CarOwnerChartStatResponse> getChartStats(ChartCategory category, String username, Date startDate, Date endDate) {
+    public List<CarChartStatResponse> getChartStats(ChartCategory category, String username, Date startDate, Date endDate) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<CarOwnerChartStatResponse> query = cb.createQuery(CarOwnerChartStatResponse.class);
+        CriteriaQuery<CarChartStatResponse> query = cb.createQuery(CarChartStatResponse.class);
         Root<CarEntity> root = query.from(CarEntity.class);
 
         Join<CarEntity, CarRentalEntity> carRentalJoin = root.join("rentals");
@@ -138,7 +138,46 @@ public class CarOwnerStatService implements ICarOwnerStatService {
                 cb.function("month", Integer.class, carRentalJoin.get("startDate")),
                 cb.function("year", Integer.class, carRentalJoin.get("startDate"))
         );
-        TypedQuery<CarOwnerChartStatResponse> typedQuery = entityManager.createQuery(query);
+        TypedQuery<CarChartStatResponse> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public List<CarChartStatResponse> getChartStatsAdmin(ChartCategory category, Date startDate, Date endDate) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<CarChartStatResponse> query = cb.createQuery(CarChartStatResponse.class);
+        Root<CarEntity> root = query.from(CarEntity.class);
+
+        Join<CarEntity, CarRentalEntity> carRentalJoin = root.join("rentals");
+        carRentalJoin.on(
+                cb.equal(carRentalJoin.get("status"), RentalStatus.COMPLETED)
+        );
+
+        Expression<Integer> month = cb.function("month", Integer.class, carRentalJoin.get("startDate"));
+        Expression<Integer> year = cb.function("year", Integer.class, carRentalJoin.get("startDate"));
+        Expression<BigDecimal> value;
+        if (category == ChartCategory.REVENUE) {
+            value = cb.sum(carRentalJoin.get("rentalPrice"));
+        } else {
+            value = cb.count(carRentalJoin).as(BigDecimal.class);
+        }
+
+        query.multiselect(
+                month,
+                year,
+                value
+        );
+        query.where(
+                cb.or(
+                        cb.between(carRentalJoin.get("startDate"), startDate, endDate),
+                        cb.between(carRentalJoin.get("endDate"), startDate, endDate)
+                )
+        );
+        query.groupBy(
+                cb.function("month", Integer.class, carRentalJoin.get("startDate")),
+                cb.function("year", Integer.class, carRentalJoin.get("startDate"))
+        );
+        TypedQuery<CarChartStatResponse> typedQuery = entityManager.createQuery(query);
         return typedQuery.getResultList();
     }
 
