@@ -1,9 +1,6 @@
 package com.carrental.controller;
 
-import com.carrental.requestmodel.CustomPriceRequest;
-import com.carrental.requestmodel.DeleteRepeatedCalendarRequest;
-import com.carrental.requestmodel.PriceRepeatedCalendarRequest;
-import com.carrental.requestmodel.RepeatedCalendarDayRequest;
+import com.carrental.requestmodel.*;
 import com.carrental.responsemodel.APIResponse;
 import com.carrental.service.IRepeatedCalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +22,29 @@ public class RepeatedCalendarController {
         }
     }
 
+    @GetMapping("/getBusyCalendar")
+    public ResponseEntity<?> getBusyCalendar(@RequestParam("username") String username, @RequestParam("carId") Long carId) {
+        try {
+            return ResponseEntity.ok(repeatedCalendarService.findAllCustomBusyByOwner(username, carId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PostMapping("/saveCustomPrice")
     public ResponseEntity<?> addNewCustomPrice(@RequestBody CustomPriceRequest request) {
         try {
             return ResponseEntity.ok(repeatedCalendarService.saveCustomPrice(request));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/saveCustomBusy")
+    public ResponseEntity<?> addNewCustomBusy(@RequestBody CustomBusyRequest request) {
+        try {
+            return ResponseEntity.ok(repeatedCalendarService.saveCustomBusy(request));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -59,6 +75,18 @@ public class RepeatedCalendarController {
     public ResponseEntity<?> deleteCustomPrice(@RequestBody DeleteRepeatedCalendarRequest request) {
         try {
             repeatedCalendarService.deleteCustomPrice(request);
+            APIResponse response = new APIResponse(new String("Deleted"), "Xóa điều chỉnh thành công", 200);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/deleteCustomBusy")
+    public ResponseEntity<?> deleteCustomBusy(@RequestBody DeleteRepeatedCalendarRequest request) {
+        try {
+            repeatedCalendarService.deleteCustomBusy(request);
             APIResponse response = new APIResponse(new String("Deleted"), "Xóa điều chỉnh thành công", 200);
             return ResponseEntity.ok(response);
         } catch (Exception e) {

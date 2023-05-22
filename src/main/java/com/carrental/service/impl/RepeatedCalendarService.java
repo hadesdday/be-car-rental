@@ -2,13 +2,16 @@ package com.carrental.service.impl;
 
 import com.carrental.constance.ErrorMessage;
 import com.carrental.entity.CarEntity;
+import com.carrental.entity.CarRentalEntity;
 import com.carrental.entity.RepeatedCalendarEntity;
 import com.carrental.enums.RepeatedCalendarType;
 import com.carrental.repository.IRepeatedCalendarRepository;
+import com.carrental.requestmodel.CustomBusyRequest;
 import com.carrental.requestmodel.CustomPriceRequest;
 import com.carrental.requestmodel.DeleteRepeatedCalendarRequest;
 import com.carrental.requestmodel.RepeatedCalendarDayRequest;
 import com.carrental.responsemodel.*;
+import com.carrental.service.ICarRentalService;
 import com.carrental.service.ICarService;
 import com.carrental.service.IRepeatedCalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,8 @@ public class RepeatedCalendarService implements IRepeatedCalendarService {
     private IRepeatedCalendarRepository repeatedCalendarRepository;
     @Autowired
     private ICarService carService;
+    @Autowired
+    private ICarRentalService carRentalService;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -49,13 +54,40 @@ public class RepeatedCalendarService implements IRepeatedCalendarService {
                     .type(RepeatedCalendarType.PRICE)
                     .build();
         }
-        RepeatedCalendarEntity updatedCalendar = repeatedCalendarRepository.save(repeatedCalendar);
+        RepeatedCalendarEntity savedCalendar = repeatedCalendarRepository.save(repeatedCalendar);
         return CustomPriceResponse.builder()
-                .id(updatedCalendar.getId())
-                .carId(updatedCalendar.getCar().getId())
-                .startDate(updatedCalendar.getStartDate())
-                .endDate(updatedCalendar.getEndDate())
-                .value(updatedCalendar.getValue())
+                .id(savedCalendar.getId())
+                .carId(savedCalendar.getCar().getId())
+                .startDate(savedCalendar.getStartDate())
+                .endDate(savedCalendar.getEndDate())
+                .value(savedCalendar.getValue())
+                .build();
+    }
+
+    @Override
+    public CustomBusyResponse saveCustomBusy(CustomBusyRequest request) throws Exception {
+        Optional<CarEntity> car = carService.findById(request.getCarId());
+        if (!car.isPresent()) throw new Exception(ErrorMessage.NO_CAR_WAS_FOUND);
+        CarRentalEntity existedRental = carRentalService.findFirstByStartDateBetweenOrEndDateBetween(request.getCarId(),
+                request.getStartDate(), request.getEndDate(), request.getStartDate(), request.getEndDate());
+
+        if (existedRental != null) throw new Exception(ErrorMessage.UNABLE_TO_SET_BUSY);
+
+        RepeatedCalendarEntity repeatedCalendar = RepeatedCalendarEntity.builder()
+                .value(request.getValue())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .car(car.get())
+                .priority(request.getPriority())
+                .type(RepeatedCalendarType.BUSY_DATE)
+                .build();
+        RepeatedCalendarEntity savedCalendar = repeatedCalendarRepository.save(repeatedCalendar);
+        return CustomBusyResponse.builder()
+                .id(savedCalendar.getId())
+                .carId(savedCalendar.getCar().getId())
+                .startDate(savedCalendar.getStartDate())
+                .endDate(savedCalendar.getEndDate())
+                .value(savedCalendar.getValue())
                 .build();
     }
 
@@ -68,11 +100,35 @@ public class RepeatedCalendarService implements IRepeatedCalendarService {
     }
 
     @Override
+    public void deleteCustomBusy(DeleteRepeatedCalendarRequest request) throws Exception {
+        RepeatedCalendarEntity repeatedCalendar = repeatedCalendarRepository.findFirstByCarIdAndTypeAndStartDateEqualsAndEndDateEquals(
+                request.getCarId(), RepeatedCalendarType.BUSY_DATE, request.getStartDate(), request.getEndDate());
+        if (repeatedCalendar == null) throw new Exception(ErrorMessage.NO_DATA_WAS_FOUND);
+        repeatedCalendarRepository.delete(repeatedCalendar);
+    }
+
+    @Override
     public List<CustomPriceResponse> findAllCustomPriceByOwner(String username, Long carId) throws Exception {
         List<RepeatedCalendarEntity> repeatedCalendarList = repeatedCalendarRepository.findAllByCarUserUsernameAndCarIdAndType(username, carId, RepeatedCalendarType.PRICE);
 
         return repeatedCalendarList.stream().map(i ->
                 CustomPriceResponse.builder()
+                        .id(i.getId())
+                        .carId(i.getCar().getId())
+                        .startDate(i.getStartDate())
+                        .endDate(i.getEndDate())
+                        .value(i.getValue())
+                        .build()
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CustomBusyResponse> findAllCustomBusyByOwner(String username, Long carId) throws Exception {
+        List<RepeatedCalendarEntity> repeatedCalendarList = repeatedCalendarRepository.findAllByCarUserUsernameAndCarIdAndType(username, carId,
+                RepeatedCalendarType.BUSY_DATE);
+
+        return repeatedCalendarList.stream().map(i ->
+                CustomBusyResponse.builder()
                         .id(i.getId())
                         .carId(i.getCar().getId())
                         .startDate(i.getStartDate())

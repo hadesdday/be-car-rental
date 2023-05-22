@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -247,6 +248,12 @@ public class CarRentalService implements ICarRentalService {
                                 .status(i.getStatus())
                                 .build()
                 ).collect(Collectors.toList());
+    }
+
+    @Override
+    public CarRentalEntity findFirstByStartDateBetweenOrEndDateBetween(Long carId, Date date1, Date date2, Date date3, Date date4) {
+        return carRentalRepository.findFirstByCarIdAndStatusBetweenAndStartDateBetweenOrEndDateBetween(carId,
+                RentalStatus.PENDING, RentalStatus.RENTED, date1, date2, date3, date4);
     }
 
 
