@@ -18,7 +18,7 @@ public class ExtraFeeEntity extends BaseEntity {
     private String unit;
     private BigInteger fee;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_fee_id")
     private ServiceFeeEntity serviceFee;
 }

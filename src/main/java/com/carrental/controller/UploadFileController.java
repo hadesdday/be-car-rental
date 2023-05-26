@@ -2,6 +2,7 @@ package com.carrental.controller;
 
 
 import com.carrental.model.FileInfo;
+import com.carrental.responsemodel.APIResponse;
 import com.carrental.service.IFileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -56,8 +57,22 @@ public class UploadFileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
+    @GetMapping("/feature-icon/{filename:.+}")
+    public ResponseEntity<Resource> getFeatureIcon(@PathVariable String filename) {
+        Resource file = storageService.loadFeatureIcon(filename);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
     @DeleteMapping("/deleteFileByName/{name}")
     public ResponseEntity<?> deleteFileByName(@PathVariable("name") String name) {
-        return ResponseEntity.status(HttpStatus.OK).body(storageService.deleteFileByName(name));
+        try {
+            String deletedFileName = storageService.deleteFileByName(name);
+            APIResponse response = new APIResponse(deletedFileName, "Successfully delete file", 200);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            APIResponse response = new APIResponse("", "Delete file failed", 404);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 }

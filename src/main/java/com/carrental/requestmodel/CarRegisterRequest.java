@@ -20,10 +20,9 @@ public class CarRegisterRequest {
     private Long brandId;
     private Integer seats;
     private String color;
-    private String engine;
+    private String fuel;
     private Double fuelConsumption;
     private String transmission;
-    private String rentalStatus;
     private String description;
     private Integer yearOfManufacture;
     private List<Long> featureList;
@@ -36,4 +35,7 @@ public class CarRegisterRequest {
     private Long serviceTypeId;//wd;self-drive
     private String policies;
     private List<String> imagesList;
+    private Long wardId;
+    private Long districtId;
+    private Long provinceId;
 }

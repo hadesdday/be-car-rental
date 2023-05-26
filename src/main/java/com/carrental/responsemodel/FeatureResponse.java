@@ -6,5 +6,5 @@ import lombok.Data;
 public class FeatureResponse {
     private Long id;
     private String name;
-    private String iconUrl;
+    private String iconFilename;
 }

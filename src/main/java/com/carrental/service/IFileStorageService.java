@@ -12,6 +12,7 @@ public interface IFileStorageService {
     String save(MultipartFile file, String extendFile);
 
     Resource load(String filename);
+    Resource loadFeatureIcon(String filename);
 
     void deleteAll();
 

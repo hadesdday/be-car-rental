@@ -9,11 +9,11 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 
 public interface IPromoService {
-    public List<PromoDTO> findAllAvailable(Specification<PromoEntity> spec);
-    public List<PromoDTO> findAll();
+    List<PromoDTO> findAllAvailable(Specification<PromoEntity> spec);
+    List<PromoDTO> findAll();
 
-    public PromoEntity addNewPromo(NewPromoRequest newPromo);
-    public void removePromo(Long id);
+    PromoEntity addNewPromo(NewPromoRequest newPromo);
+    void removePromo(Long id);
 
-    public PromoDTO updatePromo(PromoDTO updatedPromo);
+    PromoDTO updatePromo(PromoDTO updatedPromo);
 }

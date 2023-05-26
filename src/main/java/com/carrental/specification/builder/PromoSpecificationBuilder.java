@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PromoSpecificationBuilder {
-    private List<SearchCriteria> params;
+    private final List<SearchCriteria> params;
 
     public PromoSpecificationBuilder() {
         params = new ArrayList<SearchCriteria>();

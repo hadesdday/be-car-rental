@@ -3,17 +3,16 @@ package com.carrental.entity;
 
 import com.carrental.enums.RepeatedCalendarPriority;
 import com.carrental.enums.RepeatedCalendarType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "repeated_calendar")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class RepeatedCalendarEntity extends BaseEntity {
@@ -24,4 +23,7 @@ public class RepeatedCalendarEntity extends BaseEntity {
     private Date endDate;
     @Enumerated(EnumType.ORDINAL)
     private RepeatedCalendarPriority priority;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "car_id")
+    private CarEntity car;
 }

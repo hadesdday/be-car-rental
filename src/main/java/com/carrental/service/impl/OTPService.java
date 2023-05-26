@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class OTPService implements IOTPService {
     private static final Integer EXPIRE_MIN = 5;
-    private LoadingCache<String, Integer> OTPCache;
+    private final LoadingCache<String, Integer> OTPCache;
 
     public OTPService() {
         this.OTPCache = CacheBuilder.newBuilder().
