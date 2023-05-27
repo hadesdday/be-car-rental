@@ -20,10 +20,11 @@ public class SearchCarResponse {
     private BigInteger price;
     private Double avgRating;
     private Long totalCompletedRental;
-    private List<FeatureResponse> features;
+    private List<FeatureDTO> features;
     private String bannerUrl;
     private String transmission;
     private BigInteger deliveryToTenantFee;
     private String type;
     private Integer totalPages;
+    private String serviceType;
 }

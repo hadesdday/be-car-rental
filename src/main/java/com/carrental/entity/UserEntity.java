@@ -9,7 +9,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 
@@ -41,7 +40,7 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private Collection<UserCoversEntity> covers;
     @OneToMany(mappedBy = "user")
-    private Collection<FavoriteCar> favorites;
+    private Collection<FavoriteCarEntity> favorites;
     @OneToMany(mappedBy = "user")
     private Collection<NotificationUser> notificationUsers;
     @OneToMany(mappedBy = "user")

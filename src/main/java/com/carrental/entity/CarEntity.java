@@ -2,6 +2,7 @@ package com.carrental.entity;
 
 import com.carrental.enums.CarStatus;
 import lombok.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,6 +33,9 @@ public class CarEntity extends BaseEntity implements Serializable {
     @Enumerated(EnumType.ORDINAL)
     private CarStatus status;
 
+    @Transient
+    private String serviceType;
+
     @OneToOne(targetEntity = ServiceFeeEntity.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id")
     private ServiceFeeEntity service;
@@ -48,7 +52,7 @@ public class CarEntity extends BaseEntity implements Serializable {
     private Collection<FeatureEntity> features;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Collection<FavoriteCar> favorites;
+    private Collection<FavoriteCarEntity> favorites;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Collection<CarRatingEntity> ratings;
@@ -85,5 +89,6 @@ public class CarEntity extends BaseEntity implements Serializable {
         } else {
             this.avgRating = 0.0;
         }
+        this.serviceType = this.service.getServiceType().getTravelType().getCode();
     }
 }

@@ -11,6 +11,7 @@ import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.ExtraFeeRequest;
 import com.carrental.responsemodel.*;
 import com.carrental.service.*;
+import com.carrental.utils.ModelMapperUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -58,6 +59,8 @@ public class CarService implements ICarService {
     private WardService wardService;
     @Autowired
     private ProvinceService provinceService;
+    @Autowired
+    private ModelMapperUtils mpu;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -311,12 +314,13 @@ public class CarService implements ICarService {
                         .price(i.getService().getDefaultPrice())
                         .avgRating(i.getAvgRating())
                         .totalCompletedRental(rentalService.countByStatusAndCarId(RentalStatus.COMPLETED, i.getId()))
-                        .features(i.getFeatures().stream().map(item -> mapper.map(item, FeatureResponse.class)).collect(Collectors.toList()))
+                        .features(i.getFeatures().stream().map(item -> mapper.map(item, FeatureDTO.class)).collect(Collectors.toList()))
                         .bannerUrl(imageService.findFirstByCarIdAndIsThumbnail(i.getId(), true).getImageUrl())
                         .transmission(i.getTransmission())
                         .deliveryToTenantFee(extraFeeService.findDeliveryToTenantFee(i.getService().getId()))
                         .type(i.getModel().getType())
                         .totalPages(totalPages)
+                        .serviceType(i.getServiceType())
                         .build()
         ).collect(Collectors.toList());
     }
@@ -324,6 +328,12 @@ public class CarService implements ICarService {
     @Override
     public Optional<CarEntity> findById(Long id) {
         return carRepository.findById(id);
+    }
+
+    @Override
+    public List<CarResponse> findAllByUserId(Long ownerId, Pageable pageable) {
+        List<CarResponse> result = this.mpu.mapAll(this.carRepository.findAllByUserId(ownerId, pageable), CarResponse.class);
+        return result;
     }
 
 }

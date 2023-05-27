@@ -3,10 +3,7 @@ package com.carrental.service;
 import com.carrental.entity.CarRentalEntity;
 import com.carrental.enums.RentalStatus;
 import com.carrental.requestmodel.UpdateRentalStatusRequest;
-import com.carrental.responsemodel.CalendarListingResponse;
-import com.carrental.responsemodel.RentalDetailsResponse;
-import com.carrental.responsemodel.RentalListingResponse;
-import com.carrental.responsemodel.UpdateRentalStatusResponse;
+import com.carrental.responsemodel.*;
 
 import java.util.Date;
 import java.util.List;
@@ -31,4 +28,8 @@ public interface ICarRentalService {
     List<CalendarListingResponse> findCalendarByOwnerAndCarId(String username, Long carId);
 
     CarRentalEntity findFirstByStartDateBetweenOrEndDateBetween(Long carId,Date date1, Date date2, Date date3, Date date4);
+
+    // API Huy
+    List<RentalCarResponse> findAllByUserIdAndStatus(Long id, RentalStatus rentalStatus);
+
 }

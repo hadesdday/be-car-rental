@@ -1,8 +1,5 @@
 package com.carrental.entity;
 
-import com.carrental.entity.BaseEntity;
-import com.carrental.entity.CarEntity;
-import com.carrental.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "favorite_car")
 @Getter
 @Setter
-public class FavoriteCar extends BaseEntity {
+public class FavoriteCarEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "car_id")
     private CarEntity car;

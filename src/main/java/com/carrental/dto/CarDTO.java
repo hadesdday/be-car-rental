@@ -1,5 +1,6 @@
 package com.carrental.dto;
 
+import com.carrental.responsemodel.ModelDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +18,5 @@ public class CarDTO {
     private String rentalStatus;
     private String policies;
     private Boolean isFastRent;
-
-    public static void main(String[] args) {
-
-    }
+    private ModelDTO model;
 }

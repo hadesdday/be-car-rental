@@ -25,4 +25,6 @@ public interface ICarService {
     List<SearchCarResponse> searchCar(Specification<CarEntity> spec, Pageable pageable);
 
     Optional<CarEntity> findById(Long id);
+
+    List<CarResponse> findAllByUserId(Long ownerId, Pageable pageable);
 }

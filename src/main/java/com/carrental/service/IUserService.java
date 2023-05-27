@@ -11,6 +11,8 @@ public interface IUserService {
 
     UserEntity findByUsername(String username);
 
+    UserEntity getOne(Long userId);
+
     UserEntity findByUsernameAndProvider(String username, OAuthProvider provider);
 
     boolean checkPassword(UserDetails userDetails, String password);

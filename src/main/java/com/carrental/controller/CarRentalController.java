@@ -1,10 +1,17 @@
 package com.carrental.controller;
 
+import com.carrental.entity.CarRentalEntity;
+import com.carrental.enums.RentalStatus;
 import com.carrental.requestmodel.UpdateRentalStatusRequest;
+import com.carrental.responsemodel.RentalCarResponse;
+import com.carrental.responsemodel.UserTripResponse;
 import com.carrental.service.ICarRentalService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/rentals")
@@ -80,5 +87,12 @@ public class CarRentalController {
     @GetMapping("/findAllCalendarByCarOwner")
     public ResponseEntity<?> findAllCalendarByCarOwner(@RequestParam("username") String username, @RequestParam("carId") Long carId) {
         return ResponseEntity.ok(carRentalService.findCalendarByOwnerAndCarId(username, carId));
+    }
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserTripResponse> findUserTrip(@PathVariable Long userId){
+        List<RentalCarResponse> rentalCars = this.carRentalService.findAllByUserIdAndStatus(userId, RentalStatus.PENDING);
+        List<RentalCarResponse> rentedCars = this.carRentalService.findAllByUserIdAndStatus(userId, RentalStatus.COMPLETED);
+        UserTripResponse result = new UserTripResponse(rentalCars, rentedCars);
+        return ResponseEntity.ok(result);
     }
 }

@@ -1,12 +1,19 @@
 package com.carrental.controller;
 
 import com.carrental.constance.SystemConstance;
+import com.carrental.dto.CarDTO;
 import com.carrental.entity.CarEntity;
+import com.carrental.entity.FavoriteCarEntity;
 import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
+import com.carrental.requestmodel.FilterRequest;
 import com.carrental.requestmodel.SearchCarRequest;
+import com.carrental.responsemodel.CarResponse;
 import com.carrental.service.ICarService;
+import com.carrental.service.IFavCarService;
+import com.carrental.service.impl.FavCarService;
 import com.carrental.specification.builder.SearchCarBuilder;
+import com.carrental.utils.ModelMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,12 +24,20 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/cars")
+@CrossOrigin("http://localhost:4200")
 public class CarController {
     @Autowired
     private ICarService service;
+
+    @Autowired
+    private ModelMapperUtils mpu;
+
+    @Autowired
+    private IFavCarService favCarService;
 
     @PostMapping("/registerNewCar")
     public ResponseEntity<?> registerNewCar(@RequestBody CarRegisterRequest request) {
@@ -169,5 +184,27 @@ public class CarController {
 
         Pageable pageable = PageRequest.of(request.getPageNo(), 10, sortBy);
         return ResponseEntity.ok(service.searchCar(spec, pageable));
+    }
+
+    @PostMapping("/{ownerId}")
+    public ResponseEntity<List<CarResponse>> findAll(@PathVariable Long ownerId, @RequestBody FilterRequest filterRequest){
+        Pageable pageable = PageRequest.of(filterRequest.getPaging().getPage(), filterRequest.getPaging().getSize());
+        List<CarResponse> result = this.service.findAllByUserId(ownerId, pageable);
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/{carId}")
+    public ResponseEntity<CarResponse> findOne(@PathVariable Long carId, @RequestParam(required = false) Long userId){
+        CarEntity carEntity = this.service.findById(carId).get();
+        CarResponse result;
+        if(carEntity != null){
+            result = this.mpu.map(carEntity, CarResponse.class);
+            FavoriteCarEntity favoriteCar = this.favCarService.findByCarIdAndUserId(carEntity.getId(), userId);
+            if(favoriteCar != null){
+                result.setIsFav(true);
+            }
+        }else{
+            return null;
+        }
+        return ResponseEntity.ok(result);
     }
 }

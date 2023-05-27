@@ -6,11 +6,10 @@ import com.carrental.enums.CarStatus;
 import com.carrental.enums.RentalStatus;
 import com.carrental.repository.ICarRentalRepository;
 import com.carrental.requestmodel.UpdateRentalStatusRequest;
-import com.carrental.responsemodel.CalendarListingResponse;
-import com.carrental.responsemodel.RentalDetailsResponse;
-import com.carrental.responsemodel.RentalListingResponse;
-import com.carrental.responsemodel.UpdateRentalStatusResponse;
+import com.carrental.responsemodel.*;
 import com.carrental.service.ICarRentalService;
+import com.carrental.utils.ModelMapperUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +28,9 @@ public class CarRentalService implements ICarRentalService {
     private ICarRentalRepository carRentalRepository;
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private ModelMapperUtils mpu;
 
     @Override
     public List<RentalListingResponse> findByOwner(String username) {
@@ -254,6 +256,13 @@ public class CarRentalService implements ICarRentalService {
     public CarRentalEntity findFirstByStartDateBetweenOrEndDateBetween(Long carId, Date date1, Date date2, Date date3, Date date4) {
         return carRentalRepository.findFirstByCarIdAndStatusBetweenAndStartDateBetweenOrEndDateBetween(carId,
                 RentalStatus.PENDING, RentalStatus.RENTED, date1, date2, date3, date4);
+    }
+
+    @Override
+    public List<RentalCarResponse> findAllByUserIdAndStatus(Long id, RentalStatus rentalStatus) {
+        List<CarRentalEntity> foundRentalCarsEntity = this.carRentalRepository.findAllByUserIdAndStatus(id, rentalStatus);
+        List<RentalCarResponse> result = this.mpu.mapAll(foundRentalCarsEntity, RentalCarResponse.class);
+        return result;
     }
 
 

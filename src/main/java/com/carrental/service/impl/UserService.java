@@ -39,6 +39,11 @@ public class UserService  implements IUserService {
     }
 
     @Override
+    public UserEntity getOne(Long userId) {
+        return this.userRepository.findById(userId).get();
+    }
+
+    @Override
     public UserEntity findByUsernameAndProvider(String username, OAuthProvider provider) {
         return this.userRepository.findByUsernameAndProvider(username, provider);
     }
