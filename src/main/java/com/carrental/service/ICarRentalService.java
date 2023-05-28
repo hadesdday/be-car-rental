@@ -11,7 +11,7 @@ import java.util.List;
 public interface ICarRentalService {
     List<RentalListingResponse> findByOwner(String username);
 
-    RentalDetailsResponse findById(Long id);
+    RentalDetailsResponse findById(Long id) throws Exception;
 
     UpdateRentalStatusResponse acceptRental(UpdateRentalStatusRequest request) throws Exception;
 

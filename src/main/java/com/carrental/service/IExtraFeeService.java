@@ -8,4 +8,5 @@ public interface IExtraFeeService {
     List<ExtraFeeEntity> saveAll(List<ExtraFeeEntity> list);
 
     Double findDeliveryToTenantFee(Long id);
+    Long findDistanceLimit(Long id);
 }

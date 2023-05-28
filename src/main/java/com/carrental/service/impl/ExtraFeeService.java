@@ -21,8 +21,15 @@ public class ExtraFeeService implements IExtraFeeService {
     @Override
     public Double findDeliveryToTenantFee(Long id) {
         ExtraFeeEntity fee = repository.findFirstByServiceFeeIdAndName(id, "Giao xe tận nơi");
-        if (null == fee) return new Double(String.valueOf(0));
+        if (null == fee) return 0.0;
         return fee.getFee();
+    }
+
+    @Override
+    public Long findDistanceLimit(Long id) {
+        ExtraFeeEntity fee = repository.findFirstByServiceFeeIdAndName(id, "Giới hạn số KM");
+        if (null == fee) return 0L;
+        return fee.getLimitValue();
     }
 
 }
