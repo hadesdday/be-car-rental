@@ -24,7 +24,7 @@ public class CarResponse {
     private Boolean isFastRent;
     private CarStatus status;
     private ModelDTO model;
-    private Collection<FeatureDTO> features;;
+    private Collection<FeatureDTO> features;
     private UserDTO user;
     private DeliveryAddressDTO address;
     private Collection<CarRatingDTO> ratings;

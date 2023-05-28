@@ -2,7 +2,6 @@ package com.carrental.responsemodel;
 
 import com.carrental.enums.RentalStatus;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class RentalDetailsResponse {
@@ -15,11 +14,11 @@ public class RentalDetailsResponse {
     private String customerPhone;
     private RentalStatus status;
     private Long distanceLimit;
-    private BigDecimal price;
+    private Double price;
     private String bannerUrl;
     private Date createdDate;
 
-    public RentalDetailsResponse(Long id, String model, Date startDate, Date endDate, Double avgRating, String customerName, String customerPhone, RentalStatus status, Long distanceLimit, BigDecimal price, String bannerUrl, Date createdDate) {
+    public RentalDetailsResponse(Long id, String model, Date startDate, Date endDate, Double avgRating, String customerName, String customerPhone, RentalStatus status, Long distanceLimit, Double price, String bannerUrl, Date createdDate) {
         this.id = id;
         this.model = model;
         this.startDate = startDate;
@@ -106,11 +105,11 @@ public class RentalDetailsResponse {
         this.distanceLimit = distanceLimit;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

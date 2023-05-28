@@ -2,7 +2,6 @@ package com.carrental.responsemodel;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -14,11 +13,11 @@ public class RentalListingResponse {
     private String plate;
     private String customerName;
     private Double avgRating;
-    private BigDecimal price;
+    private Double price;
     private Date startDate;
     private Date endDate;
 
-    public RentalListingResponse(Long id, String bannerUrl, String model, Integer yearOfManufacture, String plate, String customerName, Double avgRating, BigDecimal price, Date startDate, Date endDate) {
+    public RentalListingResponse(Long id, String bannerUrl, String model, Integer yearOfManufacture, String plate, String customerName, Double avgRating, Double price, Date startDate, Date endDate) {
         this.id = id;
         this.bannerUrl = bannerUrl;
         this.model = model;

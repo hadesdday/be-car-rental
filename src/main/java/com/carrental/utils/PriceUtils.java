@@ -3,9 +3,6 @@ package com.carrental.utils;
 import com.carrental.entity.CarEntity;
 import com.carrental.entity.PromoEntity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 public class PriceUtils {
     public static Double computeRentalPrice(Long startTime, Long endTime, CarEntity car, PromoEntity promo){
         Double defaultPrice = car.getService().getDefaultPrice();

@@ -55,9 +55,10 @@ public class CarRentalService implements ICarRentalService {
                 )
         );
 
+//        long, java.lang.String, java.lang.String, int, java.lang.String, java.lang.String, double,
+//        double, java.util.Date, java.util.Date
         //car rating join
         Join<CarEntity, CarRatingEntity> carRatingJoin = root.join("ratings", JoinType.LEFT);
-
         query.multiselect(
                 carRentalJoin.get("id"),
                 imageJoin.get("imageUrl"),
@@ -65,8 +66,8 @@ public class CarRentalService implements ICarRentalService {
                 root.get("yearOfManufacture"),
                 root.get("plate"),
                 carRentalJoin.get("user").get("fullName"),
-                cb.coalesce(cb.avg(carRatingJoin.get("rating")), 0),
-                carRentalJoin.get("rentalPrice"),
+                cb.coalesce(cb.avg(carRatingJoin.get("rating")), 0.0),
+                cb.coalesce(carRentalJoin.get("rentalPrice"), 0.0),
                 carRentalJoin.get("startDate"),
                 carRentalJoin.get("endDate")
         ).distinct(true);

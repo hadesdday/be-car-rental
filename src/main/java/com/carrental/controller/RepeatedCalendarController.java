@@ -75,7 +75,7 @@ public class RepeatedCalendarController {
     public ResponseEntity<?> deleteCustomPrice(@RequestBody DeleteRepeatedCalendarRequest request) {
         try {
             repeatedCalendarService.deleteCustomPrice(request);
-            APIResponse response = new APIResponse(new String("Deleted"), "Xóa điều chỉnh thành công", 200);
+            APIResponse response = new APIResponse("Deleted", "Xóa điều chỉnh thành công", 200);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +87,7 @@ public class RepeatedCalendarController {
     public ResponseEntity<?> deleteCustomBusy(@RequestBody DeleteRepeatedCalendarRequest request) {
         try {
             repeatedCalendarService.deleteCustomBusy(request);
-            APIResponse response = new APIResponse(new String("Deleted"), "Xóa điều chỉnh thành công", 200);
+            APIResponse response = new APIResponse("Deleted", "Xóa điều chỉnh thành công", 200);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();

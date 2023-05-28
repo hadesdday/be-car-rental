@@ -15,7 +15,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -115,11 +114,11 @@ public class CarStatService implements ICarStatService {
 
         Expression<Integer> month = cb.function("month", Integer.class, carRentalJoin.get("startDate"));
         Expression<Integer> year = cb.function("year", Integer.class, carRentalJoin.get("startDate"));
-        Expression<BigDecimal> value;
+        Expression<Double> value;
         if (category == ChartCategory.REVENUE) {
             value = cb.sum(carRentalJoin.get("rentalPrice"));
         } else {
-            value = cb.count(carRentalJoin).as(BigDecimal.class);
+            value = cb.count(carRentalJoin).as(Double.class);
         }
 
         query.multiselect(
@@ -155,11 +154,11 @@ public class CarStatService implements ICarStatService {
 
         Expression<Integer> month = cb.function("month", Integer.class, carRentalJoin.get("startDate"));
         Expression<Integer> year = cb.function("year", Integer.class, carRentalJoin.get("startDate"));
-        Expression<BigDecimal> value;
+        Expression<Double> value;
         if (category == ChartCategory.REVENUE) {
             value = cb.sum(carRentalJoin.get("rentalPrice"));
         } else {
-            value = cb.count(carRentalJoin).as(BigDecimal.class);
+            value = cb.count(carRentalJoin).as(Double.class);
         }
 
         query.multiselect(
