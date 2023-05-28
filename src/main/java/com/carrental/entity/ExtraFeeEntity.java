@@ -3,7 +3,6 @@ package com.carrental.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 
 @Entity
 @Table(name = "extra_fee")
@@ -17,7 +16,7 @@ public class ExtraFeeEntity extends BaseEntity {
     private String code;
     private Long limitValue;
     private String unit;
-    private BigInteger fee;
+    private Double fee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_fee_id")

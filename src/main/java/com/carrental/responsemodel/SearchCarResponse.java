@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Data
@@ -23,7 +22,7 @@ public class SearchCarResponse {
     private List<FeatureDTO> features;
     private String bannerUrl;
     private String transmission;
-    private BigInteger deliveryToTenantFee;
+    private Double deliveryToTenantFee;
     private String type;
     private Integer totalPages;
     private String serviceType;

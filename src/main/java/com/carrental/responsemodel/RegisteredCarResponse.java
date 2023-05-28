@@ -3,19 +3,17 @@ package com.carrental.responsemodel;
 import com.carrental.enums.CarStatus;
 import lombok.Data;
 
-import java.math.BigInteger;
-
 @Data
 public class RegisteredCarResponse {
     private Long id;
     private String name;
-    private BigInteger defaultPrice;
+    private Double defaultPrice;
     private CarStatus status;
     private Long totalRental;
     private Double avgRating;
     private String imageUrl;
 
-    public RegisteredCarResponse(Long id, String name, BigInteger defaultPrice, CarStatus status, Long totalRental, Double avgRating, String imageUrl) {
+    public RegisteredCarResponse(Long id, String name, Double defaultPrice, CarStatus status, Long totalRental, Double avgRating, String imageUrl) {
         this.id = id;
         this.name = name;
         this.defaultPrice = defaultPrice;
@@ -41,11 +39,11 @@ public class RegisteredCarResponse {
         this.name = name;
     }
 
-    public BigInteger getDefaultPrice() {
+    public Double getDefaultPrice() {
         return defaultPrice;
     }
 
-    public void setDefaultPrice(BigInteger defaultPrice) {
+    public void setDefaultPrice(Double defaultPrice) {
         this.defaultPrice = defaultPrice;
     }
 
