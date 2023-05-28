@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ServiceFeeEntity extends BaseEntity {
-    private BigInteger defaultPrice;
+    private Double defaultPrice;
     private Integer discountByWeek;
     private Integer discountByMonth;
 

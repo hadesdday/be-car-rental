@@ -17,7 +17,7 @@ public class SearchCarResponse {
     private String modelName;
     private Integer yearOfManufacture;
     private String location;
-    private BigInteger price;
+    private Double price;
     private Double avgRating;
     private Long totalCompletedRental;
     private List<FeatureDTO> features;

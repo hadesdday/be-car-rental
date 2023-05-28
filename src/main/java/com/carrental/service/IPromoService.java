@@ -16,4 +16,6 @@ public interface IPromoService {
     void removePromo(Long id);
 
     PromoDTO updatePromo(PromoDTO updatedPromo);
+
+    PromoEntity findById(Long id);
 }

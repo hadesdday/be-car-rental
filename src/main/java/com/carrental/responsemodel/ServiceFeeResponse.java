@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 public class ServiceFeeResponse {
-    private BigInteger defaultPrice;
+    private Double defaultPrice;
     private Integer discountByWeek;
     private Integer discountByMonth;
     private List<ExtraFeeResponse> extraFeeList;

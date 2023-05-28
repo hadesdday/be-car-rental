@@ -29,7 +29,7 @@ public class CarRegisterResponse {
     private String description;
     private Integer yearOfManufacture;
     private List<Long> featureList;
-    private BigInteger defaultPrice; //unit_price
+    private Double defaultPrice; //unit_price
     private Integer discountByWeek;
     private Integer discountByMonth;
     private Boolean isFastRent;

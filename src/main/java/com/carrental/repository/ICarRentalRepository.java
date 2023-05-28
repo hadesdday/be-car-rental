@@ -20,4 +20,5 @@ public interface ICarRentalRepository extends JpaRepository<CarRentalEntity, Lon
     CarRentalEntity findFirstByCarIdAndStatusBetweenAndStartDateBetweenOrEndDateBetween(Long carId,RentalStatus status1, RentalStatus status2, Date date1, Date date2, Date date3, Date date4);
 
     List<CarRentalEntity> findAllByUserIdAndStatus(Long userId, RentalStatus rentalStatus);
+
 }

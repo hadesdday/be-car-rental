@@ -9,7 +9,7 @@ import java.math.BigInteger;
 public class CarAdminRequest {
     private Long id;
     private String color;
-    private BigInteger price;
+    private Double price;
     private Long brand;
     private Long model;
     private Long serviceType;

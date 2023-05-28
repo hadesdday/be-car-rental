@@ -26,7 +26,7 @@ public class PromoSpecification implements Specification<PromoEntity> {
             return criteriaBuilder.equal(root.get(param), value);
         } else if (operator.equals("availableDate")) {
             Expression<Date> startDate = root.get("startDate");
-            Expression<Date> endDate = root.get("endDate");
+            Expression<Date> endDate = root.get("endDate    ");
             return criteriaBuilder.between(criteriaBuilder.currentDate(), startDate, endDate);
         }else if (operator.equals("greaterThan")) {
             return criteriaBuilder.greaterThan(root.get(param), Integer.valueOf(value.toString()));

@@ -1,9 +1,9 @@
 package com.carrental.controller;
 
 import com.carrental.constance.SystemConstance;
-import com.carrental.dto.CarDTO;
 import com.carrental.entity.CarEntity;
 import com.carrental.entity.FavoriteCarEntity;
+import com.carrental.entity.PromoEntity;
 import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.FilterRequest;
@@ -11,6 +11,7 @@ import com.carrental.requestmodel.SearchCarRequest;
 import com.carrental.responsemodel.CarResponse;
 import com.carrental.service.ICarService;
 import com.carrental.service.IFavCarService;
+import com.carrental.service.IPromoService;
 import com.carrental.service.impl.FavCarService;
 import com.carrental.specification.builder.SearchCarBuilder;
 import com.carrental.utils.ModelMapperUtils;
@@ -23,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +41,9 @@ public class CarController {
 
     @Autowired
     private IFavCarService favCarService;
+    @Autowired
+    private IPromoService promoService;
+
 
     @PostMapping("/registerNewCar")
     public ResponseEntity<?> registerNewCar(@RequestBody CarRegisterRequest request) {
@@ -187,22 +193,58 @@ public class CarController {
     }
 
     @PostMapping("/{ownerId}")
-    public ResponseEntity<List<CarResponse>> findAll(@PathVariable Long ownerId, @RequestBody FilterRequest filterRequest){
+    public ResponseEntity<List<CarResponse>> findAll(@PathVariable Long ownerId, @RequestBody FilterRequest filterRequest) {
         Pageable pageable = PageRequest.of(filterRequest.getPaging().getPage(), filterRequest.getPaging().getSize());
         List<CarResponse> result = this.service.findAllByUserId(ownerId, pageable);
         return ResponseEntity.ok(result);
     }
-    @GetMapping("/{carId}")
-    public ResponseEntity<CarResponse> findOne(@PathVariable Long carId, @RequestParam(required = false) Long userId){
+
+    @GetMapping("/detail/{carId}")
+    public ResponseEntity<CarResponse> findOne(@PathVariable Long carId, @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime, @RequestParam(value = "promoId", required = false) Long promoId, @RequestParam(required = false) Long userId) {
         CarEntity carEntity = this.service.findById(carId).get();
         CarResponse result;
-        if(carEntity != null){
+        if (carEntity != null) {
             result = this.mpu.map(carEntity, CarResponse.class);
-            FavoriteCarEntity favoriteCar = this.favCarService.findByCarIdAndUserId(carEntity.getId(), userId);
-            if(favoriteCar != null){
-                result.setIsFav(true);
+            if (userId != null) {
+                FavoriteCarEntity favoriteCar = this.favCarService.findByCarIdAndUserId(carEntity.getId(), userId);
+                if (favoriteCar != null) {
+                    result.setIsFav(true);
+                }
             }
-        }else{
+            Double defaultPrice = result.getService().getDefaultPrice();
+            Long days = (endTime - startTime) / 86400000;
+            days = (endTime - startTime) % 86400000 > 0? days + 1: days;
+            Double newDefaultPrice;
+            Double rentalFee;
+            Integer discount = 0;
+            if(days > 7 && days <= 31){
+                discount = result.getService().getDiscountByWeek();
+            }else if(days > 31){
+                discount = result.getService().getDiscountByMonth();
+            }
+            Double discountPrice = 0.0;
+            if(promoId != null){
+                System.out.println(promoId);
+                PromoEntity foundPromo = this.promoService.findById(promoId);
+                if(foundPromo != null){
+                    discountPrice = defaultPrice * foundPromo.getDiscountPercent() / 100;
+                    System.out.println(discountPrice);
+                }
+            }
+            newDefaultPrice = defaultPrice * (100 - discount) / 100;
+            Double insuranceFee = defaultPrice * 0.12;
+            Double serviceFee = insuranceFee;
+            rentalFee = newDefaultPrice + insuranceFee + serviceFee - discountPrice;
+            result.setRentalFee(rentalFee);
+            Double total = days * rentalFee;
+            result.getService().setDefaultPrice(newDefaultPrice);
+            result.setRentalDay(days);
+            result.setRentalFee(rentalFee);
+            result.setInsuranceFee(insuranceFee);
+            result.setAppServiceFee(serviceFee);
+            result.setTotalFee(total);
+            result.setDiscountPrice(discountPrice);
+        } else {
             return null;
         }
         return ResponseEntity.ok(result);

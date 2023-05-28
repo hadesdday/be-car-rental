@@ -10,4 +10,5 @@ public class ExtraFeeResponse {
     private Long limitValue;
     private String unit;
     private BigInteger fee;
+    private String code;
 }

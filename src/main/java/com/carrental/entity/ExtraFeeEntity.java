@@ -14,6 +14,7 @@ import java.math.BigInteger;
 @AllArgsConstructor
 public class ExtraFeeEntity extends BaseEntity {
     private String name;
+    private String code;
     private Long limitValue;
     private String unit;
     private BigInteger fee;

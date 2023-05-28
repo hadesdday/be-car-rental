@@ -165,7 +165,7 @@ public class RepeatedCalendarService implements IRepeatedCalendarService {
         TypedQuery<DateValueResponse> typedQuery = entityManager.createQuery(query);
         priceList = (typedQuery.getResultList());
 
-        BigInteger defaultPrice = car.get().getService().getDefaultPrice();
+        Double defaultPrice = car.get().getService().getDefaultPrice();
 
         return PriceRepeatedCalendarResponse.builder()
                 .carId(car.get().getId())
