@@ -298,5 +298,10 @@ public class CarRentalService implements ICarRentalService {
         return this.carRentalRepository.saveAndFlush(carRentalEntity);
     }
 
+    @Override
+    public List<CarRentalEntity> findAllByCarIdAndStatus(Long carId, RentalStatus rentalStatus) {
+        return this.carRentalRepository.findAllByCarIdAndStatus(carId, rentalStatus);
+    }
+
 
 }

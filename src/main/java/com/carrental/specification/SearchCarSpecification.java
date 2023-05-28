@@ -124,17 +124,27 @@ public class SearchCarSpecification implements Specification<CarEntity> {
                 Subquery<Long> subquery = query.subquery(Long.class);
                 Root<CarRentalEntity> carRentalRoot = subquery.from(CarRentalEntity.class);
                 subquery.select(carRentalRoot.get("car").get("id"))
-                        .where(criteriaBuilder.or(
+                        .where(criteriaBuilder.and(
 //                                        criteriaBuilder.greaterThan(carRentalRoot.get("startDate"), dateRange[0]),
 //                                        criteriaBuilder.greaterThan(carRentalRoot.get("startDate"), dateRange[1]),
 //                                        criteriaBuilder.greaterThan(carRentalRoot.get("endDate"), dateRange[0]),
 //                                        criteriaBuilder.greaterThan(carRentalRoot.get("endDate"), dateRange[1])
-                                        criteriaBuilder.between(carRentalRoot.get("startDate"), dateRange[0], dateRange[1]),
-                                        criteriaBuilder.between(carRentalRoot.get("endDate"), dateRange[0], dateRange[1]),
-                                        criteriaBuilder.lessThan(carRentalRoot.get("startDate"), dateRange[0]),
-                                        criteriaBuilder.greaterThan(carRentalRoot.get("endDate"), dateRange[1])
-                                ),
-                                criteriaBuilder.between(carRentalRoot.get("status"), RentalStatus.PENDING, RentalStatus.RENTED)
+                                        criteriaBuilder.or(
+                                                criteriaBuilder.and(
+                                                        criteriaBuilder.between(carRentalRoot.get("startDate"), dateRange[0], dateRange[1]),
+                                                        criteriaBuilder.between(carRentalRoot.get("endDate"), dateRange[0], dateRange[1])
+                                                ),
+                                                criteriaBuilder.and(
+                                                        criteriaBuilder.lessThan(carRentalRoot.get("startDate"), dateRange[0]),
+                                                        criteriaBuilder.greaterThan(carRentalRoot.get("endDate"), dateRange[0])
+                                                ),
+                                                criteriaBuilder.and(
+                                                        criteriaBuilder.lessThan(carRentalRoot.get("startDate"), dateRange[1]),
+                                                        criteriaBuilder.greaterThan(carRentalRoot.get("endDate"), dateRange[1])
+                                                )
+                                        ),
+                                        criteriaBuilder.equal(carRentalRoot.get("status"), RentalStatus.RENTED)
+                                )
                         );
                 return criteriaBuilder.not(root.get("id").in(subquery));
             case "type":

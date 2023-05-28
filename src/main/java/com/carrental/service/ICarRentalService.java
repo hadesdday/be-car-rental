@@ -34,5 +34,5 @@ public interface ICarRentalService {
 
     CarRentalEntity saveAndFlush(CarRentalEntity carRentalEntity);
 
-
+    List<CarRentalEntity> findAllByCarIdAndStatus(Long carId, RentalStatus rentalStatus);
 }

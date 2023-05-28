@@ -21,4 +21,6 @@ public interface ICarRentalRepository extends JpaRepository<CarRentalEntity, Lon
 
     List<CarRentalEntity> findAllByUserIdAndStatus(Long userId, RentalStatus rentalStatus);
 
+    List<CarRentalEntity> findAllByCarIdAndStatus(Long carId, RentalStatus rentalStatus);
+
 }

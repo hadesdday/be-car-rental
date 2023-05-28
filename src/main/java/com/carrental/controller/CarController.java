@@ -2,13 +2,16 @@ package com.carrental.controller;
 
 import com.carrental.constance.SystemConstance;
 import com.carrental.entity.CarEntity;
+import com.carrental.entity.CarRentalEntity;
 import com.carrental.entity.FavoriteCarEntity;
 import com.carrental.entity.PromoEntity;
+import com.carrental.enums.RentalStatus;
 import com.carrental.requestmodel.CarAdminRequest;
 import com.carrental.requestmodel.CarRegisterRequest;
 import com.carrental.requestmodel.FilterRequest;
 import com.carrental.requestmodel.SearchCarRequest;
 import com.carrental.responsemodel.CarResponse;
+import com.carrental.service.ICarRentalService;
 import com.carrental.service.ICarService;
 import com.carrental.service.IFavCarService;
 import com.carrental.service.IPromoService;
@@ -43,6 +46,9 @@ public class CarController {
     private IFavCarService favCarService;
     @Autowired
     private IPromoService promoService;
+
+    @Autowired
+    private ICarRentalService carRentalService;
 
 
     @PostMapping("/registerNewCar")
@@ -205,6 +211,23 @@ public class CarController {
         CarResponse result;
         if (carEntity != null) {
             result = this.mpu.map(carEntity, CarResponse.class);
+            boolean isDenyRent = false;
+            List<CarRentalEntity> foundRentedCars = this.carRentalService.findAllByCarIdAndStatus(carId, RentalStatus.RENTED);
+            System.out.println("foundRentedCars " + foundRentedCars.size());
+            for (CarRentalEntity foundRentedCar : foundRentedCars) {
+                System.out.println(foundRentedCar.getCar().getId());
+                Long sTime = foundRentedCar.getStartDate().getTime();
+                Long eTime = foundRentedCar.getEndDate().getTime();
+                boolean isInSide = startTime > sTime && endTime < eTime;
+                boolean isInLeftSide = startTime < sTime && endTime > sTime;
+                boolean isInRightSide = startTime < endTime && endTime > eTime;
+                if(isInSide || isInLeftSide || isInRightSide){
+                    isDenyRent = true;
+                    break;
+                }
+            }
+            System.out.println(isDenyRent);
+            result.setIsDenyRent(isDenyRent);
             if (userId != null) {
                 FavoriteCarEntity favoriteCar = this.favCarService.findByCarIdAndUserId(carEntity.getId(), userId);
                 if (favoriteCar != null) {

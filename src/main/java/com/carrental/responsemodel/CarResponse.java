@@ -37,4 +37,5 @@ public class CarResponse {
     private Double appServiceFee;
     private Double totalFee;
     private Double discountPrice;
+    private Boolean isDenyRent;
 }
