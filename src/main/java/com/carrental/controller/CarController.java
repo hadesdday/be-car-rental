@@ -16,8 +16,10 @@ import com.carrental.service.ICarService;
 import com.carrental.service.IFavCarService;
 import com.carrental.service.IPromoService;
 import com.carrental.service.impl.FavCarService;
+import com.carrental.specification.CarSpecification;
 import com.carrental.specification.builder.SearchCarBuilder;
 import com.carrental.utils.ModelMapperUtils;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -271,5 +273,14 @@ public class CarController {
             return null;
         }
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/feature/service-type/{serviceTypeId}")
+    public ResponseEntity findFeatureCars(@PathVariable Long serviceTypeId){
+        Specification<CarEntity> specification = CarSpecification.hasServiceTypeIdEquals(serviceTypeId);
+        Sort sort = Sort.by(Sort.Direction.DESC, "avgRating");
+        PageRequest pageRequest = PageRequest.of(0, 10, sort);
+        System.out.println(this.service.findAll(specification, pageRequest).size());
+        return ResponseEntity.ok(this.mpu.mapAll(this.service.findAll(specification, pageRequest), CarResponse.class));
     }
 }

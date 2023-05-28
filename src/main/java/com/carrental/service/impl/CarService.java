@@ -336,4 +336,10 @@ public class CarService implements ICarService {
         return result;
     }
 
+
+    @Override
+    public List<CarEntity> findAll(Specification spec, Pageable pageable) {
+        return this.carRepository.findAll(spec, pageable).getContent();
+    }
+
 }

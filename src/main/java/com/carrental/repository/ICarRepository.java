@@ -13,4 +13,5 @@ public interface ICarRepository extends JpaRepository<CarEntity, Long>, JpaSpeci
     CarEntity findFirstByPlateEqualsIgnoreCase(String plate);
 
     List<CarEntity> findAllByUserId(Long ownerId, Pageable pageable);
+
 }

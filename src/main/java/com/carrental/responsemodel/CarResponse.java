@@ -3,11 +3,13 @@ package com.carrental.responsemodel;
 import com.carrental.dto.CarRatingDTO;
 import com.carrental.dto.DeliveryAddressDTO;
 import com.carrental.dto.UserDTO;
+import com.carrental.entity.CarImagesEntity;
 import com.carrental.entity.CarRatingEntity;
 import com.carrental.enums.CarStatus;
 import lombok.Data;
 
 import java.util.Collection;
+import java.util.List;
 
 @Data
 public class CarResponse {
@@ -38,4 +40,5 @@ public class CarResponse {
     private Double totalFee;
     private Double discountPrice;
     private Boolean isDenyRent;
+    private List<ImageResponse> images;
 }
