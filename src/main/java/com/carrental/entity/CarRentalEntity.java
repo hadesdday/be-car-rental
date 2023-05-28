@@ -19,7 +19,7 @@ public class CarRentalEntity extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     private RentalStatus status;
 
-    private BigDecimal rentalPrice;
+    private Double rentalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id")

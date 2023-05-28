@@ -63,7 +63,8 @@ public class PromoController {
     public ResponseEntity findAllAvailable() {
         try {
             PromoSpecificationBuilder builder = new PromoSpecificationBuilder();
-            Specification<PromoEntity> spec = builder.with("", "", "availableDate").with("quantity", 0, "greaterThan").build();
+//            Specification<PromoEntity> spec = builder.with("", "", "availableDate").with("quantity", 0, "greaterThan").build();
+            Specification<PromoEntity> spec = builder.with("quantity", 0, "greaterThan").build();
             List<PromoDTO> availablePromosData = this.promoService.findAllAvailable(spec);
             APIResponse<List<PromoDTO>> response = new APIResponse<>(availablePromosData, HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
             return ResponseEntity.ok(response);

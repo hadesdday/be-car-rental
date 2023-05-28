@@ -265,5 +265,10 @@ public class CarRentalService implements ICarRentalService {
         return result;
     }
 
+    @Override
+    public CarRentalEntity saveAndFlush(CarRentalEntity carRentalEntity) {
+        return this.carRentalRepository.saveAndFlush(carRentalEntity);
+    }
+
 
 }

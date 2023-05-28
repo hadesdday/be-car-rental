@@ -18,7 +18,7 @@ public class CarAdminResponse {
     private Date createdDate;
     private String color;
     private String plate;
-    private BigInteger price;
+    private Double price;
     private IdNameResponse brand;
     private IdNameResponse model;
     private IdNameResponse serviceType;

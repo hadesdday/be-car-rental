@@ -11,6 +11,7 @@ import java.util.Collection;
 
 @Data
 public class CarResponse {
+    private Long id;
     private String plate;
     private String description;
     private Integer yearOfManufacture;
@@ -30,4 +31,10 @@ public class CarResponse {
     private Boolean isFav;
     private String serviceType;
     private ServiceFeeResponse service;
+    private Long rentalDay;
+    private Double rentalFee;
+    private Double insuranceFee;
+    private Double appServiceFee;
+    private Double totalFee;
+    private Double discountPrice;
 }

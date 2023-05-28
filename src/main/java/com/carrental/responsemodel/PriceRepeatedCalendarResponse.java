@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class PriceRepeatedCalendarResponse {
     private Long carId;
-    private BigInteger defaultPrice;
+    private Double defaultPrice;
     private List<DateValueResponse> priceByDays;
 }

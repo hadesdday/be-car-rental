@@ -32,4 +32,7 @@ public interface ICarRentalService {
     // API Huy
     List<RentalCarResponse> findAllByUserIdAndStatus(Long id, RentalStatus rentalStatus);
 
+    CarRentalEntity saveAndFlush(CarRentalEntity carRentalEntity);
+
+
 }

@@ -53,4 +53,9 @@ public class PromoService implements IPromoService {
         this.promoRepository.save(foundPromo);
         return this.mp.map(foundPromo, PromoDTO.class);
     }
+
+    @Override
+    public PromoEntity findById(Long id) {
+        return this.promoRepository.getById(id);
+    }
 }
