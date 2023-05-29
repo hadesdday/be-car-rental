@@ -104,7 +104,7 @@ public class CarRentalController {
     }
     @GetMapping("/{userId}")
     public ResponseEntity<UserTripResponse> findUserTrip(@PathVariable Long userId){
-        List<RentalCarResponse> rentalCars = this.carRentalService.findAllByUserIdAndStatus(userId, RentalStatus.PENDING);
+        List<RentalCarResponse> rentalCars = this.carRentalService.findAllByUserIdAndStatus(userId, RentalStatus.RENTED);
         List<RentalCarResponse> rentedCars = this.carRentalService.findAllByUserIdAndStatus(userId, RentalStatus.COMPLETED);
         UserTripResponse result = new UserTripResponse(rentalCars, rentedCars);
         return ResponseEntity.ok(result);
